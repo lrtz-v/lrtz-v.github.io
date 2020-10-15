@@ -5,19 +5,30 @@ title: Lrtz Blog
 description: Lrtz的个人博客
 keywords: Lrtz,Blog,Java,Go,Python
 author: Lrtz
-footerText: 'Copyright © 2016 Lrtz'
+footerText: "Copyright © 2016 Lrtz"
 
 # 这些不要动
 permalink: /posts/:year/:month/:day/:title.html
 kramdown:
   auto_ids: true
   input: GFM
-exclude: ['CNAME', 'README.md', 'LICENSE', '_site', 'dist', 'Gemfile', 'Gemfile.lock', 'cli.bat', 'dist.tar.gz']
+exclude:
+  [
+    "CNAME",
+    "README.md",
+    "LICENSE",
+    "_site",
+    "dist",
+    "Gemfile",
+    "Gemfile.lock",
+    "cli.bat",
+    "dist.tar.gz",
+  ]
 
 # 域名配置
 # baseurl配置,如果网站部署在根目录下的其他目录中，请设置为 /目录名
-domainUrl: 'https://lrtz-v.github.io/'
-baseurl: ''
+domainUrl: "https://lrtz-v.github.io"
+baseurl: "/"
 
 # 吐个槽地址，会在chat页面中重定向到该地址
 tucaoUrl: https://github.com/lrtz-v/lrtz-v.github.io/issues
