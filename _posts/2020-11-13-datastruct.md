@@ -1,7 +1,7 @@
 ---
-layout: mypost
 title: Redis-Hash-接口
-categories: [Redis]
+date: 2020-10-17 20:30:01
+tags: [Redis]
 ---
 
 # Redis-Hash-接口
