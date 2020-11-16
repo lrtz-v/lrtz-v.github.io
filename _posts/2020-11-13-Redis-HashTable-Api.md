@@ -47,7 +47,7 @@ static void _dictReset(dictht *ht)
 
 ## key 插入 1：dictAddRaw
 
-- 查询 key 的 slot 并插入 entry
+- 查询 key 的 bucket 并插入 dictEntry
 - 当 key 已存在时，抛出异常
 
 ```c
@@ -80,7 +80,7 @@ dictEntry *dictAddRaw(dict *d, void *key, dictEntry **existing)
     return entry;
 }
 
-// 节点slot定位
+// 节点 bucket 定位
 static long _dictKeyIndex(dict *d, const void *key, uint64_t hash, dictEntry **existing)
 {
     unsigned long idx, table;
@@ -104,7 +104,7 @@ static long _dictKeyIndex(dict *d, const void *key, uint64_t hash, dictEntry **e
             he = he->next;
         }
 
-        // 不在rehash过程中时，只在ht[0]中定位slot即可
+        // 不在rehash过程中时，只在ht[0]中定位 bucket 即可
         if (!dictIsRehashing(d)) break;
     }
     return idx;
@@ -442,5 +442,199 @@ dictIterator *dictGetSafeIterator(dict *d) {
     // 设置安全标志
     i->safe = 1;
     return i;
+}
+```
+
+## 迭代器遍历：dictNext
+
+- 完成两个 hashtable 的遍历
+- 完成冲突节点的链表遍历
+
+```c
+dictEntry *dictNext(dictIterator *iter) {
+    while (1) {
+        if (iter->entry == NULL) {
+            dictht *ht = &iter->d->ht[iter->table];
+
+            // 第一次遍历
+            if (iter->index == -1 && iter->table == 0) {
+                if (iter->safe)
+                    // 迭代器数量+1
+                    iter->d->iterators++;
+                else
+                    // 记录dict指纹
+                    iter->fingerprint = dictFingerprint(iter->d);
+            }
+            iter->index++;
+
+            // 检查遍历索引大于 buckets 数量
+            if (iter->index >= (long) ht->size) {
+                // rehash 中检查，继续遍历ht[1]
+                if (dictIsRehashing(iter->d) && iter->table == 0) {
+                    iter->table++;
+                    iter->index = 0;
+                    ht = &iter->d->ht[1];
+                } else {
+                    break;
+                }
+            }
+            iter->entry = ht->table[iter->index];
+        } else {
+            iter->entry = iter->nextEntry;
+        }
+
+        if (iter->entry) {
+            // 设置 nextEntry
+            iter->nextEntry = iter->entry->next;
+            return iter->entry;
+        }
+    }
+    return NULL;
+}
+```
+
+## 迭代器删除：dictReleaseIterator
+
+```c
+void dictReleaseIterator(dictIterator *iter)
+{
+    // 检查迭代器是否使用
+    if (!(iter->index == -1 && iter->table == 0)) {
+        if (iter->safe)
+            // 迭代器数量-1
+            iter->d->iterators--;
+        else
+            // 检查指纹对比
+            assert(iter->fingerprint == dictFingerprint(iter->d));
+    }
+    zfree(iter);
+}
+```
+
+## 获取随机 key：dictGetRandomKey
+
+```c
+dictEntry *dictGetRandomKey(dict *d) {
+    dictEntry *he, *orighe;
+    unsigned long h;
+    int listlen, listele;
+
+    // empty check
+    if (dictSize(d) == 0) return NULL;
+
+    // help rehash
+    if (dictIsRehashing(d)) _dictRehashStep(d);
+
+    if (dictIsRehashing(d)) {
+        // 在 rehash 过程中时
+        do {
+            // 随机一个大于 rehashidx，小于 ht[1] 大小的值，找到非空 bucket
+            h = d->rehashidx + (random() % (d->ht[0].size + d->ht[1].size - d->rehashidx));
+            he = (h >= d->ht[0].size) ? d->ht[1].table[h - d->ht[0].size] : d->ht[0].table[h];
+        } while(he == NULL);
+    } else {
+        // 不在 rehash 过程中时，在 ht[0] buckets 范围内随机找到一个非空节点
+        do {
+            h = random() & d->ht[0].sizemask;
+            he = d->ht[0].table[h];
+        } while(he == NULL);
+    }
+
+    listlen = 0;
+    orighe = he;
+
+    // 统计链表长度
+    while(he) {
+        he = he->next;
+        listlen++;
+    }
+    // 随机一个小于链表长度的值
+    listele = random() % listlen;
+    he = orighe;
+
+    // 定位这个值
+    while(listele--) he = he->next;
+    return he;
+}
+```
+
+## 公平获取随机 key：dictGetFairRandomKey
+
+```c
+
+```
+
+## 批量获取随机 key：dictGetSomeKeys
+
+```c
+
+```
+
+## rehash
+
+```c
+int dictRehash(dict *d, int n) {
+    // 最大空 bucket 检测次数
+    int empty_visits = n*10;
+
+    // rehash 中检查
+    if (!dictIsRehashing(d)) return 0;
+
+    // step 控制
+    while(n-- && d->ht[0].used != 0) {
+        dictEntry *de, *nextde;
+
+        // rehashidx overflow check
+        assert(d->ht[0].size > (unsigned long)d->rehashidx);
+
+        // 查找非空 bucket
+        while(d->ht[0].table[d->rehashidx] == NULL) {
+            d->rehashidx++;
+            if (--empty_visits == 0) return 1;
+        }
+
+        // 拿到 entry
+        de = d->ht[0].table[d->rehashidx];
+
+        // 处理链表中的所有entry
+        while(de) {
+            uint64_t h;
+            nextde = de->next;
+
+            // 计算新的 bucket 位置
+            h = dictHashKey(d, de->key) & d->ht[1].sizemask;
+
+            // 头节点插入
+            de->next = d->ht[1].table[h];
+            d->ht[1].table[h] = de;
+            d->ht[0].used--;
+            d->ht[1].used++;
+            de = nextde;
+        }
+
+        // 旧的 bucket 置空
+        d->ht[0].table[d->rehashidx] = NULL;
+
+        // rehash 位置+1
+        d->rehashidx++;
+    }
+
+    // rehash 完成检查
+    if (d->ht[0].used == 0) {
+        // 释放旧的 hashtable
+        zfree(d->ht[0].table);
+
+        // 使用扩容后的 hashtable 替换旧的 hashtable
+        d->ht[0] = d->ht[1];
+
+        // ht[1] 重置
+        _dictReset(&d->ht[1]);
+
+        // rehash 标志重置
+        d->rehashidx = -1;
+        return 0;
+    }
+
+    return 1;
 }
 ```

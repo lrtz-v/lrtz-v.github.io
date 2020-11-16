@@ -57,7 +57,7 @@ typedef struct dict {
     // rehash 标志，默认为-1（未在扩容中）
     long rehashidx;
 
-    // 迭代器遍历标志
+    // 迭代器数量
     unsigned long iterators;
 } dict;
 ```
@@ -113,7 +113,7 @@ typedef struct dictIterator {
     // hashTable 标志(0/1)；安全标志
     int table, safe;
 
-    // 当前节点；下一个节点
+    // 当前entrey、链表的下一个节点
     dictEntry *entry, *nextEntry;
 
     // dict 指纹
