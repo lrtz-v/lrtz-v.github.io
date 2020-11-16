@@ -765,7 +765,7 @@ uint64_t dictGenHashFunction(const void *key, int len) {
 }
 ```
 
-## siphash 大小写相关 hash 生成函数 dictGenHashFunction
+## siphash 大小写敏感 hash 生成函数 dictGenHashFunction
 
 ```c
 uint64_t dictGenCaseHashFunction(const unsigned char *buf, int len) {
