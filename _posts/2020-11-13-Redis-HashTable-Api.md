@@ -558,19 +558,253 @@ dictEntry *dictGetRandomKey(dict *d) {
 }
 ```
 
+## 批量获取随机 key：dictGetSomeKeys
+
+- 不保证返回指定数量的随机节点，也不保证不返回重复节点
+
+```c
+unsigned int dictGetSomeKeys(dict *d, dictEntry **des, unsigned int count) {
+    unsigned long j;
+    unsigned long tables;
+    unsigned long stored = 0, maxsizemask;
+    unsigned long maxsteps;
+
+    // 检查 count 是否大于 两个 hashtable 长度之和
+    if (dictSize(d) < count) count = dictSize(d);
+
+    // 初始化最大查找次数
+    maxsteps = count*10;
+
+    // 协助 rehash
+    for (j = 0; j < count; j++) {
+        if (dictIsRehashing(d))
+            _dictRehashStep(d);
+        else
+            break;
+    }
+
+    // 确定 hashtable 查询数量范围
+    tables = dictIsRehashing(d) ? 2 : 1;
+
+    // 获取最大掩码
+    maxsizemask = d->ht[0].sizemask;
+    if (tables > 1 && maxsizemask < d->ht[1].sizemask)
+        maxsizemask = d->ht[1].sizemask;
+
+    // 计算 bucket 初始位置
+    unsigned long i = random() & maxsizemask;
+    // 连续空 bucket 统计
+    unsigned long emptylen = 0;
+    while(stored < count && maxsteps--) {
+        for (j = 0; j < tables; j++) {
+
+            // 如果在 rehash 中，在 ht[0] 中 0 - rehashidx - 1 的值已经完成迁移
+            if (tables == 2 && j == 0 && i < (unsigned long) d->rehashidx) {
+                // 检查初始位置有效性，如果越界，赋值为 rehashidx
+                if (i >= d->ht[1].size)
+                    i = d->rehashidx;
+                else
+                    // 在ht[1] 中继续
+                    continue;
+            }
+
+            // index overflow 检查
+            if (i >= d->ht[j].size) continue;
+            dictEntry *he = d->ht[j].table[i];
+
+            // 检查 empty bucket
+            if (he == NULL) {
+                emptylen++;
+                // 如果连续5个空 bucket，并且大于目标 entry 数量，重新计算初始 bucket 位置
+                if (emptylen >= 5 && emptylen > count) {
+                    i = random() & maxsizemask;
+                    emptylen = 0;
+                }
+            } else {
+                emptylen = 0;
+                // 将链表的所有节点放入结果集
+                while (he) {
+                    *des = he;
+                    des++;
+                    he = he->next;
+                    stored++;
+                    if (stored == count) return stored;
+                }
+            }
+        }
+
+        // 连续递增，并且防止越界
+        i = (i+1) & maxsizemask;
+    }
+    return stored;
+}
+```
+
 ## 公平获取随机 key：dictGetFairRandomKey
 
 ```c
+dictEntry *dictGetFairRandomKey(dict *d) {
 
+    // 定义结果集，默认长度15
+    dictEntry *entries[GETFAIR_NUM_ENTRIES];
+
+    // 获取随机节点
+    unsigned int count = dictGetSomeKeys(d,entries,GETFAIR_NUM_ENTRIES);
+
+    // 结果集为空，则调用 dictGetRandomKey 返回一个随机节点
+    if (count == 0) return dictGetRandomKey(d);
+
+    // 根据结果集长度，随机返回一个节点
+    unsigned int idx = rand() % count;
+    return entries[idx];
+}
 ```
 
-## 批量获取随机 key：dictGetSomeKeys
+## Debug 接口获取 htstats： dictGetStats
 
 ```c
+void dictGetStats(char *buf, size_t bufsize, dict *d) {
+    size_t l;
+    char *orig_buf = buf;
+    size_t orig_bufsize = bufsize;
 
+    // 获取 ht[0] 状态信息
+    l = _dictGetStatsHt(buf,bufsize,&d->ht[0],0);
+    buf += l;
+    bufsize -= l;
+
+    // 获取 ht[1] 状态信息
+    if (dictIsRehashing(d) && bufsize > 0) {
+        _dictGetStatsHt(buf,bufsize,&d->ht[1],1);
+    }
+
+    // set '\0' 为 buf 尾元素
+    if (orig_bufsize) orig_buf[orig_bufsize-1] = '\0';
+}
+
+// 获取 hashtable 状态
+size_t _dictGetStatsHt(char *buf, size_t bufsize, dictht *ht, int tableid) {
+    unsigned long i, slots = 0, chainlen, maxchainlen = 0;
+    unsigned long totchainlen = 0;
+
+    // 链表长度统计
+    unsigned long clvector[DICT_STATS_VECTLEN];
+    size_t l = 0;
+
+    // empty check
+    if (ht->used == 0) {
+        return snprintf(buf,bufsize,"No stats available for empty dictionaries\n");
+    }
+
+    // 结果集初始化
+    for (i = 0; i < DICT_STATS_VECTLEN; i++) clvector[i] = 0;
+    for (i = 0; i < ht->size; i++) {
+        dictEntry *he;
+
+        // 空 bucket 检查
+        if (ht->table[i] == NULL) {
+            clvector[0]++;
+            continue;
+        }
+
+        // 非空 slot 统计
+        slots++;
+
+        // 计算链表长度
+        chainlen = 0;
+        he = ht->table[i];
+        while(he) {
+            chainlen++;
+            he = he->next;
+        }
+
+        // 根据链表长度统计 key 数量
+        clvector[(chainlen < DICT_STATS_VECTLEN) ? chainlen : (DICT_STATS_VECTLEN-1)]++;
+
+        // 计算最长链表
+        if (chainlen > maxchainlen) maxchainlen = chainlen;
+
+        // 统计链表长度和
+        totchainlen += chainlen;
+    }
+
+    // 可读信息生成：hashtable 信息、size、使用数量、slots、最长链表，链表节点占比、使用率
+    l += snprintf(buf+l,bufsize-l,
+        "Hash table %d stats (%s):\n"
+        " table size: %ld\n"
+        " number of elements: %ld\n"
+        " different slots: %ld\n"
+        " max chain length: %ld\n"
+        " avg chain length (counted): %.02f\n"
+        " avg chain length (computed): %.02f\n"
+        " Chain length distribution:\n",
+        tableid, (tableid == 0) ? "main hash table" : "rehashing target",
+        ht->size, ht->used, slots, maxchainlen,
+        (float)totchainlen/slots, (float)ht->used/slots);
+
+    for (i = 0; i < DICT_STATS_VECTLEN-1; i++) {
+        if (clvector[i] == 0) continue;
+        if (l >= bufsize) break;
+        l += snprintf(buf+l,bufsize-l,
+            "   %s%ld: %ld (%.02f%%)\n",
+            (i == DICT_STATS_VECTLEN-1)?">= ":"",
+            i, clvector[i], ((float)clvector[i]/ht->size)*100);
+    }
+
+    /* Unlike snprintf(), teturn the number of characters actually written. */
+    if (bufsize) buf[bufsize-1] = '\0';
+    return strlen(buf);
+}
 ```
 
-## rehash
+## siphash hash 生成函数 dictGenHashFunction
+
+```c
+uint64_t dictGenHashFunction(const void *key, int len) {
+    return siphash(key,len,dict_hash_function_seed);
+}
+```
+
+## siphash 大小写相关 hash 生成函数 dictGenHashFunction
+
+```c
+uint64_t dictGenCaseHashFunction(const unsigned char *buf, int len) {
+    return siphash_nocase(buf,len,dict_hash_function_seed);
+}
+```
+
+## 清空 dict： dictEmpty
+
+```c
+void dictEmpty(dict *d, void(callback)(void*)) {
+
+    // hashtable 节点及空间释放
+    _dictClear(d,&d->ht[0],callback);
+    _dictClear(d,&d->ht[1],callback);
+
+    // 重置 rehashidx 及迭代器计数
+    d->rehashidx = -1;
+    d->iterators = 0;
+}
+```
+
+## 启用 rehash：dictEnableResize
+
+```c
+void dictEnableResize(void) {
+    dict_can_resize = 1;
+}
+```
+
+## 禁止 rehash：dictEnableResize
+
+```c
+void dictDisableResize(void) {
+    dict_can_resize = 0;
+}
+```
+
+## 限制步数 rehash：dictRehash
 
 ```c
 int dictRehash(dict *d, int n) {
@@ -636,5 +870,199 @@ int dictRehash(dict *d, int n) {
     }
 
     return 1;
+}
+```
+
+## 限时 rehash：dictRehashMilliseconds
+
+```c
+int dictRehashMilliseconds(dict *d, int ms) {
+    // 迭代中，
+    if (d->iterators > 0) return 0;
+
+    // 获取 rehash 开始时间
+    long long start = timeInMilliseconds();
+    int rehashes = 0;
+
+    // 执行100次 rehash
+    while(dictRehash(d,100)) {
+        rehashes += 100;
+
+        // 超时检查
+        if (timeInMilliseconds()-start > ms) break;
+    }
+
+    // 返回 rehash 次数
+    return rehashes;
+}
+
+long long timeInMilliseconds(void) {
+    struct timeval tv;
+    gettimeofday(&tv,NULL);
+    return (((long long)tv.tv_sec)*1000)+(tv.tv_usec/1000);
+}
+```
+
+## 设置 hash 函数种子：dictSetHashFunctionSeed
+
+```c
+static uint8_t dict_hash_function_seed[16];
+
+void dictSetHashFunctionSeed(uint8_t *seed) {
+    memcpy(dict_hash_function_seed,seed,sizeof(dict_hash_function_seed));
+}
+```
+
+## 获取 hash 函数种子：dictGetHashFunctionSeed
+
+```c
+uint8_t *dictGetHashFunctionSeed(void) {
+    return dict_hash_function_seed;
+}
+```
+
+## dict 扫描：dictScan
+
+- dictScan() 用于遍历字典的所有元素
+- // TODO
+
+```c
+unsigned long dictScan(dict *d, unsigned long v, dictScanFunction *fn, dictScanBucketFunction* bucketfn, void *privdata) {
+    dictht *t0, *t1;
+    const dictEntry *de, *next;
+    unsigned long m0, m1;
+
+    // empty check
+    if (dictSize(d) == 0) return 0;
+
+    // 迭代器数量+1，防止 rehash
+    d->iterators++;
+
+    // 如果不在 rehash 中
+    if (!dictIsRehashing(d)) {
+        t0 = &(d->ht[0]);
+        m0 = t0->sizemask;
+
+        // bucket callback
+        if (bucketfn) bucketfn(privdata, &t0->table[v & m0]);
+        de = t0->table[v & m0];
+
+        // 链表遍历
+        while (de) {
+            next = de->next;
+
+            // 链表节点 callback
+            fn(privdata, de);
+            de = next;
+        }
+
+        /* Set unmasked bits so incrementing the reversed cursor
+         * operates on the masked bits */
+        v |= ~m0;
+
+        // [reverse bits](http://graphics.stanford.edu/~seander/bithacks.html#ReverseParallel)
+        v = rev(v);
+        v++;
+        v = rev(v);
+
+    } else {
+        t0 = &d->ht[0];
+        t1 = &d->ht[1];
+
+        // 确保 t0 长度小于 t1
+        if (t0->size > t1->size) {
+            t0 = &d->ht[1];
+            t1 = &d->ht[0];
+        }
+
+        m0 = t0->sizemask;
+        m1 = t1->sizemask;
+
+        // bucket callback
+        if (bucketfn) bucketfn(privdata, &t0->table[v & m0]);
+        de = t0->table[v & m0];
+
+        // 链表遍历
+        while (de) {
+            next = de->next;
+
+            // 链表节点 callback
+            fn(privdata, de);
+            de = next;
+        }
+
+        /* Iterate over indices in larger table that are the expansion
+         * of the index pointed to by the cursor in the smaller table */
+        // t1 遍历
+        do {
+            // bucket callback
+            if (bucketfn) bucketfn(privdata, &t1->table[v & m1]);
+            de = t1->table[v & m1];
+
+            // 链表遍历
+            while (de) {
+                next = de->next;
+
+                // 链表节点 callback
+                fn(privdata, de);
+                de = next;
+            }
+
+            // [reverse bits](http://graphics.stanford.edu/~seander/bithacks.html#ReverseParallel)
+            v |= ~m1;
+            v = rev(v);
+            v++;
+            v = rev(v);
+
+            /* Continue while bits covered by mask difference is non-zero */
+        } while (v & (m0 ^ m1));
+    }
+
+    // 迭代器数量-1
+    d->iterators--;
+
+    return v;
+}
+```
+
+## 计算 hash： dictGetHash
+
+- 使用的 hash 函数为初始化 dict 时设置的 hash 函数
+
+```c
+uint64_t dictGetHash(dict *d, const void *key) {
+    return dictHashKey(d, key);
+}
+```
+
+## 根据指针和 hash 查询 entry： dictFindEntryRefByPtrAndHash
+
+```c
+dictEntry **dictFindEntryRefByPtrAndHash(dict *d, const void *oldptr, uint64_t hash) {
+    dictEntry *he, **heref;
+    unsigned long idx, table;
+
+    // empty check
+    if (dictSize(d) == 0) return NULL;
+    for (table = 0; table <= 1; table++) {
+        // 计算 slot
+        idx = hash & d->ht[table].sizemask;
+        heref = &d->ht[table].table[idx];
+        he = *heref;
+
+        // 链表节点查询
+        while(he) {
+
+            // 通过指针对比代替 key 对比
+            if (oldptr==he->key)
+                return heref;
+            heref = &he->next;
+            he = *heref;
+        }
+
+        // 非 rehash 过程中，不需要查询 ht[1]
+        if (!dictIsRehashing(d)) return NULL;
+    }
+    return NULL;
 }
 ```
