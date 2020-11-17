@@ -806,6 +806,8 @@ void dictDisableResize(void) {
 
 ## 限制步数 rehash：dictRehash
 
+- iterators 迭代器数量必须为 0
+
 ```c
 int dictRehash(dict *d, int n) {
     // 最大空 bucket 检测次数
@@ -924,9 +926,26 @@ uint8_t *dictGetHashFunctionSeed(void) {
 ## dict 扫描：dictScan
 
 - dictScan() 用于遍历字典的所有元素
-- // TODO
+- 开始遍历那一刻的所有元素，只要不被删除，肯定能被遍历到，不管字典扩展还是缩小
+- 可能会返回重复元素，但是已经把返回重复元素的可能性降到了最低
 
 ```c
+
+/* 对 v 进行二进制逆序操作 http://graphics.stanford.edu/~seander/bithacks.html#ReverseParallel */
+static unsigned long rev(unsigned long v) {
+    unsigned long s = CHAR_BIT * sizeof(v); // bit size; must be power of 2
+    unsigned long mask = ~0UL;
+    while ((s >>= 1) > 0) {
+        mask ^= (mask << s);
+        v = ((v >> s) & mask) | ((v << s) & ~mask);
+    }
+    return v;
+}
+
+/*
+字典遍历
+v： 要遍历的 bucket 索引
+*/
 unsigned long dictScan(dict *d, unsigned long v, dictScanFunction *fn, dictScanBucketFunction* bucketfn, void *privdata) {
     dictht *t0, *t1;
     const dictEntry *de, *next;
@@ -947,25 +966,21 @@ unsigned long dictScan(dict *d, unsigned long v, dictScanFunction *fn, dictScanB
         if (bucketfn) bucketfn(privdata, &t0->table[v & m0]);
         de = t0->table[v & m0];
 
-        // 链表遍历
+        // bucket 链表遍历
         while (de) {
             next = de->next;
-
-            // 链表节点 callback
-            fn(privdata, de);
+            fn(privdata, de);  // 链表节点 callback
             de = next;
         }
 
-        /* Set unmasked bits so incrementing the reversed cursor
-         * operates on the masked bits */
-        v |= ~m0;
+        v |= ~m0;  // 保留 v 的低 n 位数，其余位全置为 1
 
-        // [reverse bits](http://graphics.stanford.edu/~seander/bithacks.html#ReverseParallel)
-        v = rev(v);
-        v++;
-        v = rev(v);
-
+        // [二进制反转](http://graphics.stanford.edu/~seander/bithacks.html#ReverseParallel)
+        v = rev(v);  // 将 v 的二进制位进行翻转，所以，v的低 n 位数成了高 n 位数，并且进行了翻转
+        v++;         // 自增
+        v = rev(v);  // 再次二进制翻转
     } else {
+        // 在 rehash 过程中
         t0 = &d->ht[0];
         t1 = &d->ht[1];
 
@@ -982,39 +997,31 @@ unsigned long dictScan(dict *d, unsigned long v, dictScanFunction *fn, dictScanB
         if (bucketfn) bucketfn(privdata, &t0->table[v & m0]);
         de = t0->table[v & m0];
 
-        // 链表遍历
+        // bucket 链表遍历
         while (de) {
             next = de->next;
-
-            // 链表节点 callback
-            fn(privdata, de);
+            fn(privdata, de);  // 链表节点 callback
             de = next;
         }
 
-        /* Iterate over indices in larger table that are the expansion
-         * of the index pointed to by the cursor in the smaller table */
-        // t1 遍历
+        // 大的 hashtable t1 遍历
         do {
-            // bucket callback
-            if (bucketfn) bucketfn(privdata, &t1->table[v & m1]);
+            if (bucketfn) bucketfn(privdata, &t1->table[v & m1]);  // bucket callback
             de = t1->table[v & m1];
 
-            // 链表遍历
+            // bucket 链表遍历
             while (de) {
                 next = de->next;
-
-                // 链表节点 callback
-                fn(privdata, de);
+                fn(privdata, de);  // 链表节点 callback
                 de = next;
             }
 
-            // [reverse bits](http://graphics.stanford.edu/~seander/bithacks.html#ReverseParallel)
-            v |= ~m1;
-            v = rev(v);
-            v++;
-            v = rev(v);
+            v |= ~m1;     // 保留 v 的低 n 位数，其余位全置为 1
+            v = rev(v);   // 将 v 的二进制位进行翻转，所以，v的低 n 位数成了高 n 位数，并且进行了翻转
+            v++;          // 自增
+            v = rev(v);   // 再次二进制翻转
 
-            /* Continue while bits covered by mask difference is non-zero */
+        // 直到 v 的低 m1-m0 位到低 m1 位之间全部为 0 为止
         } while (v & (m0 ^ m1));
     }
 
