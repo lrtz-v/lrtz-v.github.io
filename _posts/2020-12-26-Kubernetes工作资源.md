@@ -1,32 +1,10 @@
 ---
-title: k8s-核心概念
-date: 2020-12-01 20:30:01
-tags: [k8s]
+title: Kubernetes工作资源
+date: 2020-12-26 20:30:01
+tags: [k8s, Kubernetes, kubernetes]
 ---
 
-# k8s-核心概念
-
-## Master
-
-- Master 指集群的控制节点，每个 k8s 集群都需要一个 Master 节点负责整个集群的管理和控制
-- 所有的控制命令都是发送给 Master 节点，负责具体的执行过程
-
-### Master 的关键进程
-
-- api-server：提供 HTTTP Rest 接口
-- controller-manager：所有资源对象的自动化控制中心
-- scheduler：负责资源调度
-
-## Node
-
-- 除了 Master，k8s 集群中的其他机器被称为 Node 节点，可以是物理机也可以是虚拟机
-- Node 节点是工作负载节点，Master 负责工作负载
-
-### Node 的关键进程
-
-- kubelet：负责 Pod 对应的容器的创建等任务，同时与与 Master 密切协作，实现集群管理的基本功能；kubelet 会向 Master 注册自己，定时向 Master 汇报自身的情况
-- kube-proxy：负责 Kubernetes Service 的通讯与负载均衡的重要组件
-- Docker Engine：Docker 引擎，负责本机的容器创建和管理
+# Kubernetes 工作资源
 
 ## Pod
 
