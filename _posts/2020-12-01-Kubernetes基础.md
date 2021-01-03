@@ -711,4 +711,199 @@ spec:
 
 #### Pod 拓扑分布约束
 
-// TODO
+- 通过拓扑分布约束来控制 Pods 在集群内故障域 之间的分布，例如区域（Region）、可用区（Zone）、节点和其他用户自定义拓扑域
+- 依赖于节点标签来标识每个节点所在的拓扑域
+
+##### Pod 的分布约束
+
+- 字段
+  - maxSkew：描述 Pod 分布不均的程度。这是给定拓扑类型中任意两个拓扑域中 匹配的 pod 之间的最大允许差值，必须大于零
+    - 当 whenUnsatisfiable 等于 "DoNotSchedule" 时，maxSkew 是目标拓扑域 中匹配的 Pod 数与全局最小值之间可存在的差异
+    - 当 whenUnsatisfiable 等于 "ScheduleAnyway" 时，调度器会更为偏向能够降低偏差值的拓扑域
+  - topologyKey 是节点标签的键。如果两个节点使用此键标记并且具有相同的标签值， 则调度器会将这两个节点视为处于同一拓扑域中。调度器试图在每个拓扑域中放置数量均衡的 Pod
+  - whenUnsatisfiable 指示如果 Pod 不满足分布约束时如何处理：
+    - DoNotSchedule（默认）告诉调度器不要调度
+    - ScheduleAnyway 告诉调度器仍然继续调度，只是根据如何能将偏差最小化来对 节点进行排序
+  - labelSelector 用于查找匹配的 pod。匹配此标签的 Pod 将被统计，以确定相应 拓扑域中 Pod 的数量
+
+- 示例如下
+
+  ```yaml
+  kind: Pod
+  apiVersion: v1
+  metadata:
+    name: mypod
+    labels:
+      foo: bar
+  spec:
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          foo: bar
+    containers:
+    - name: pause
+      image: k8s.gcr.io/pause:3.1
+  ```
+
+  - topologyKey: zone，意味着均匀分布将只应用于存在标签键值对为 "zone:<any value>" 的节点
+  - whenUnsatisfiable: DoNotSchedule 告诉调度器如果新的 Pod 不满足约束， 则让它保持悬决状态
+
+- 多个 TopologySpreadConstraints 示例
+
+  ```yaml
+  kind: Pod
+  apiVersion: v1
+  metadata:
+    name: mypod
+    labels:
+      foo: bar
+  spec:
+    topologySpreadConstraints:
+    - maxSkew: 1
+      topologyKey: zone
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          foo: bar
+    - maxSkew: 1
+      topologyKey: node
+      whenUnsatisfiable: DoNotSchedule
+      labelSelector:
+        matchLabels:
+          foo: bar
+    containers:
+    - name: pause
+      image: k8s.gcr.io/pause:3.1
+  ```
+
+  - 多个约束之间可能存在冲突
+
+- 约定
+  - 只有与新的 Pod 具有相同命名空间的 Pod 才能作为匹配候选者
+  - 没有 topologySpreadConstraints[*].topologyKey 的节点将被忽略
+    - 位于这些节点上的 Pod 不影响 maxSkew 的计算
+    - 新的 Pod 没有机会被调度到这类节点上
+  - 如果新 Pod 的 topologySpreadConstraints[*].labelSelector 与自身的标签不匹配，在调度之后，集群的不平衡程度保持不变
+  - 如果新 Pod 定义了 spec.nodeSelector 或 spec.affinity.nodeAffinity，则不匹配的节点会被忽略
+
+- 集群级别的默认约束
+  - 为集群设置默认的拓扑分布约束也是可能的。默认拓扑分布约束在且仅在以下条件满足 时才会应用到 Pod 上
+    - Pod 没有在其 .spec.topologySpreadConstraints 设置任何约束
+    - Pod 隶属于某个服务、副本控制器、ReplicaSet 或 StatefulSet
+  - 示例
+
+  ```yaml
+  apiVersion: kubescheduler.config.k8s.io/v1beta1
+  kind: KubeSchedulerConfiguration
+
+  profiles:
+    - pluginConfig:
+        - name: PodTopologySpread
+          args:
+            defaultConstraints:
+              - maxSkew: 1
+                topologyKey: topology.kubernetes.io/zone
+                whenUnsatisfiable: ScheduleAnyway
+  ```
+
+  - 内部默认约束
+    - 当启用了 DefaultPodTopologySpread 特性门控时，原来的 SelectorSpread 插件会被禁用，kube-scheduler 会使用下面的默认拓扑约束作为 PodTopologySpread 插件的配置
+
+    ```yaml
+    defaultConstraints:
+    - maxSkew: 3
+      topologyKey: "kubernetes.io/hostname"
+      whenUnsatisfiable: ScheduleAnyway
+    - maxSkew: 5
+      topologyKey: "topology.kubernetes.io/zone"
+      whenUnsatisfiable: ScheduleAnyway
+    ```
+
+- 与 PodAffinity/PodAntiAffinity 相比较
+  - 与“亲和性”相关的指令控制 Pod 的调度方式
+    - 对于 PodAffinity，你可以尝试将任意数量的 Pod 集中到符合条件的拓扑域中
+    - 对于 PodAntiAffinity，只能将一个 Pod 调度到某个拓扑域中
+
+#### 干扰
+
+- 自愿干扰和非自愿干扰
+  - 非自愿干扰：Pod 不会消失，除非有人（用户或控制器）将其销毁，或者出现了不可避免的硬件或软件系统错误
+    - 节点下层物理机的硬件故障
+    - 集群管理员错误地删除虚拟机（实例）
+    - 云提供商或虚拟机管理程序中的故障导致的虚拟机消失
+    - 内核错误
+    - 节点由于集群网络隔离从集群中消失
+    - 由于节点资源不足导致 pod 被驱逐
+  - 自愿干扰
+    - 删除 Deployment 或其他管理 Pod 的控制器
+    - 更新了 Deployment 的 Pod 模板导致 Pod 重启
+    - 直接删除 Pod（例如，因为误操作）
+    - 排空（drain）节点进行修复或升级。
+    - 从集群中排空节点以缩小集群（了解集群自动扩缩）
+    - 从节点中移除一个 Pod，以允许其他 Pod 使用该节点
+
+- 处理干扰
+  - 确保 Pod 在请求中给出所需资源
+  - 如果需要更高的可用性，请复制应用程序。 （了解有关运行多副本的无状态 和有状态应用程序的信息）
+  - 为了在运行复制应用程序时获得更高的可用性，请跨机架（使用 反亲和性）或跨区域 （如果使用多区域集群）扩展应用程序
+
+- 干扰预算
+  - 应用程序所有者可以为每个应用程序创建 PodDisruptionBudget 对象（PDB），PDB 将限制在同一时间因自愿干扰导致的复制应用程序中宕机的 pod 数量
+    - 例如，基于票选机制的应用程序希望确保运行的副本数永远不会低于仲裁所需的数量
+  - 集群管理员和托管提供商应该使用遵循 Pod Disruption Budgets 的接口 （通过调用Eviction API）， 而不是直接删除 Pod 或 Deployment
+    - 例如，kubectl drain 命令可以用来标记某个节点即将停止服务。 运行 kubectl drain 命令时，工具会尝试驱逐机器上的所有 Pod
+  - PDB 指定应用程序可以容忍的副本数量（相当于应该有多少副本）
+    - 例如，具有 .spec.replicas: 5 的 Deployment 在任何时间都应该有 5 个 Pod。 如果 PDB 允许其在某一时刻有 4 个副本，那么驱逐 API 将允许同一时刻仅有一个而不是两个 Pod 自愿干扰
+  - 使用标签选择器来指定构成应用程序的一组 Pod，这与应用程序的控制器（Deployment，StatefulSet 等） 选择 Pod 的逻辑一样；Pod 控制器的 .spec.replicas 计算“预期的” Pod 数量。 根据 Pod 对象的 .metadata.ownerReferences 字段来发现控制器
+  - PDB 不能阻止非自愿干扰的发生，但是确实会计入 预算
+
+#### 临时容器
+
+- 由于 Pod 是一次性且可替换的，因此一旦 Pod 创建，就无法将容器加入到 Pod 中
+- 有时有必要检查现有 Pod 的状态。例如，对于难以复现的故障进行排查。 在这些场景中，可以在现有 Pod 中运行临时容器来检查其状态并运行任意命令
+- 临时容器
+  - 临时容器缺少对资源或执行的保证，并且永远不会自动重启， 因此不适用于构建应用程序，同样使用ContainerSpec描述，但许多字段是不兼容和不允许的
+    - 临时容器没有端口配置，因此像 ports，livenessProbe，readinessProbe 这样的字段是不允许的
+    - Pod 资源分配是不可变的，因此 resources 配置是不允许的
+    - 更多见 [EphemeralContainer 参考文档](http://localhost:1313/docs/reference/generated/kubernetes-api/v1.20/#ephemeralcontainer-v1-core)
+  - 临时容器是使用 API 中的一种特殊的 ephemeralcontainers 处理器进行创建的， 而不是直接添加到 pod.spec 段，因此无法使用 kubectl edit 来添加一个临时容器
+  - 与常规容器一样，将临时容器添加到 Pod 后，将不能更改或删除临时容器
+- 用途
+  - 当由于容器崩溃或容器镜像不包含调试工具而导致 kubectl exec 无用时， 临时容器对于交互式故障排查很有用
+  - 示例
+
+  ```json
+    {
+      "apiVersion": "v1",
+      "kind": "EphemeralContainers",
+      "metadata": {
+              "name": "example-pod"
+      },
+      "ephemeralContainers": [{
+          "command": [
+              "sh"
+          ],
+          "image": "busybox",
+          "imagePullPolicy": "IfNotPresent",
+          "name": "debugger",
+          "stdin": true,
+          "tty": true,
+          "terminationMessagePolicy": "File"
+      }]
+  }
+  ```
+
+  - 使用如下命令更新已运行的临时容器 example-pod
+
+  ```sh
+  kubectl replace --raw /api/v1/namespaces/default/pods/example-pod/ephemeralcontainers  -f ec.json
+  ```
+
+  - 使用以下命令连接到新的临时容器
+
+  ```sh
+  kubectl attach -it example-pod -c debugger
+  ```
