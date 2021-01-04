@@ -358,7 +358,7 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
     - 未运行 Deployment 的旧副本
 
 - 失败的 Deployment
-  - 出现场景
+  - Deployment 可能一直处于未完成状态，出现场景如下
     - 配额（Quota）不足
     - 就绪探测（Readiness Probe）失败
     - 镜像拉取错误
@@ -366,3 +366,205 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
     - 限制范围（Limit Ranges）问题
     - 应用程序运行时的配置错误
   - 检测方式
+    - 在 Deployment 规约中指定截止时间参数：.spec.progressDeadlineSeconds
+
+    ```bash
+    ➜  ~: kubectl patch deployment.v1.apps/nginx-deployment -p '{"spec":{"progressDeadlineSeconds":600}}'
+    ```
+
+    - 一旦超过 Deployment 进度限期，Kubernetes 将更新状态和进度状况的原因
+
+    ```bash
+    Conditions:
+      Type            Status  Reason
+      ----            ------  ------
+      Available       True    MinimumReplicasAvailable
+      Progressing     False   ProgressDeadlineExceeded
+      ReplicaFailure  True    FailedCreate
+    ```
+
+### 清理策略
+
+- 在 Deployment 中设置 .spec.revisionHistoryLimit 字段以指定保留此 Deployment 的多少个旧有 ReplicaSet。其余的 ReplicaSet 将在后台被垃圾回收。 默认情况下，此值为 10
+  - 将此字段设置为 0 将导致 Deployment 的所有历史记录被清空，因此 Deployment 将无法回滚
+
+### Deployment 规约
+
+- apiVersion，kind 和 metadata
+
+- Pod 模板
+  - .spec 中只有 .spec.template 和 .spec.selector 是必需的字段
+    - .spec.template 是一个 Pod 模板
+
+- 副本
+  - .spec.replicas 是指定所需 Pod 的可选字段。它的默认值是1
+
+- 选择算符
+  - .spec.selector 是指定本 Deployment 的 Pod 标签选择算符的必需字段
+    - 必须匹配 .spec.template.metadata.labels，否则请求会被 API 拒绝
+
+- 策略
+  - .spec.strategy 策略指定用于用新 Pods 替换旧 Pods 的策略
+  - .spec.strategy.type 可以是 “Recreate” 或 “RollingUpdate”(默认)
+
+  - 重新创建 Deployment
+    - 如果 .spec.strategy.type==Recreate，在创建新 Pods 之前，所有现有的 Pods 会被杀死
+
+  - 滚动更新 Deployment
+    - Deployment 会在 .spec.strategy.type==RollingUpdate时，采取滚动更新的方式更新 Pods，可以指定 maxUnavailable 和 maxSurge 来控制滚动更新过程
+      - maxUnavailable
+        - .spec.strategy.rollingUpdate.maxUnavailable 是一个可选字段，用来指定 更新过程中不可用的 Pod 的个数上限；该值可以是绝对数字（例如，5），也可以是 所需 Pods 的百分比（例如，10%）。百分比值会转换成绝对数并去除小数部分。 如果 .spec.strategy.rollingUpdate.maxSurge 为 0，则此值不能为 0。 默认值为 25%
+      - maxSurge
+        - .spec.strategy.rollingUpdate.maxSurge 是一个可选字段，用来指定可以创建的超出 期望 Pod 个数的 Pod 数量。此值可以是绝对数（例如，5）或所需 Pods 的百分比（例如，10%）。 如果 MaxUnavailable 为 0，则此值不能为 0。百分比值会通过向上取整转换为绝对数。 此字段的默认值为 25%
+
+- 进度期限秒数
+  - .spec.progressDeadlineSeconds 是一个可选字段，用于指定系统在报告 Deployment 进展失败 之前等待 Deployment 取得进展的秒数
+  - 如果指定，则此字段值需要大于 .spec.minReadySeconds 取值
+
+- 最短就绪时间
+  - .spec.minReadySeconds 是一个可选字段，用于指定新创建的 Pod 在没有任意容器崩溃情况下的最小就绪时间， 只有超出这个时间 Pod 才被视为可用。默认值为 0（Pod 在准备就绪后立即将被视为可用）
+
+- 修订历史限制
+  - Deployment 的修订历史记录存储在它所控制的 ReplicaSets 中
+  - .spec.revisionHistoryLimit 是一个可选字段，用来设定出于会滚目的所要保留的旧 ReplicaSet 数量。 这些旧 ReplicaSet 会消耗 etcd 中的资源，并占用 kubectl get rs 的输出
+  - 每个 Deployment 修订版本的配置都存储在其 ReplicaSets 中；因此，一旦删除了旧的 ReplicaSet， 将失去回滚到 Deployment 的对应修订版本的能力。 默认情况下，系统保留 10 个旧 ReplicaSet，但其理想值取决于新 Deployment 的频率和稳定性
+
+- paused
+  - .spec.paused 是用于暂停和恢复 Deployment 的可选布尔字段。
+  - 暂停的 Deployment 和未暂停的 Deployment 的唯一区别是
+    - Deployment 处于暂停状态时， PodTemplateSpec 的任何修改都不会触发新的上线。 Deployment 在创建时是默认不会处于暂停状态
+
+## StatefulSets
+
+- StatefulSet 是用来管理有状态应用的工作负载 API 对象；可以用来管理某 Pod 集合的部署和扩缩， 并为这些 Pod 提供持久存储和持久标识符
+  - 和 Deployment 类似， StatefulSet 管理基于相同容器规约的一组 Pod
+  - 但和 Deployment 不同的是， StatefulSet 为它们的每个 Pod 维护了一个有粘性的 ID，这些 Pod 是基于相同的规约来创建的， 但是不能相互替换：无论怎么调度，每个 Pod 都有一个永久不变的 ID
+
+### 限制
+
+- 给定 Pod 的存储必须由 PersistentVolume 驱动 基于所请求的 storage class 来提供，或者由管理员预先提供
+- 删除或者收缩 StatefulSet 并不会删除它关联的存储卷。 这样做是为了保证数据安全，它通常比自动清除 StatefulSet 所有相关的资源更有价值
+- StatefulSet 当前需要 Headless Service 来负责 Pod 的网络标识。你需要负责创建此服务
+- 当删除 StatefulSets 时，StatefulSet 不提供任何终止 Pod 的保证。 为了实现 StatefulSet 中的 Pod 可以有序地且体面地终止，可以在删除之前将 StatefulSet 缩放为 0
+- 在默认 Pod 管理策略(OrderedReady) 时使用 滚动更新，可能进入需要人工干预 才能修复的损坏状态
+
+### 示例
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: app
+  labels:
+    app: app
+spec:
+  selector:
+    app: app
+  clusterIP: None
+  ports:
+  - name: default
+    protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: app
+spec:
+  selector:
+    matchLabels:
+      app: app
+  serviceName: "app"
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: app
+        image: app:1.0.3
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
+          name: app
+```
+
+### Pod 选择算符
+
+- 必须设置 StatefulSet 的 .spec.selector 字段，使之匹配其在 .spec.template.metadata.labels 中设置的标签
+
+### Pod 标识
+
+- StatefulSet Pod 具有唯一的标识，该标识包括顺序标识、稳定的网络标识和稳定的存储。 该标识和 Pod 是绑定的，不管它被调度在哪个节点上
+
+- 有序索引
+  - 对于具有 N 个副本的 StatefulSet，StatefulSet 中的每个 Pod 将被分配一个整数序号， 从 0 到 N-1，该序号在 StatefulSet 上是唯一的
+
+- 稳定的网络 ID
+  - StatefulSet 中的每个 Pod 根据 StatefulSet 的名称和 Pod 的序号派生出它的主机名
+  - 组合主机名的格式为$(StatefulSet 名称)-$(序号)
+  - StatefulSet 可以使用 Headless Service 控制它的 Pod 的网络域。管理域的这个服务的格式为： $(服务名称).$(命名空间).svc.cluster.local，其中 cluster.local 是集群域。 一旦每个 Pod 创建成功，就会得到一个匹配的 DNS 子域，格式为： $(pod 名称).$(所属服务的 DNS 域名)，其中所属服务由 StatefulSet 的 serviceName 域来设定。
+
+- 稳定的存储
+  - Kubernetes 为每个 VolumeClaimTemplate 创建一个 PersistentVolume
+  - 在上面的示例中，每个 Pod 将会得到基于 StorageClass my-storage-class 提供的 1 Gib 的 PersistentVolume。如果没有声明 StorageClass，就会使用默认的 StorageClass。 当一个 Pod 被调度（重新调度）到节点上时，它的 volumeMounts 会挂载与其 PersistentVolumeClaims 相关联的 PersistentVolume。 请注意，当 Pod 或者 StatefulSet 被删除时，与 PersistentVolumeClaims 相关联的 PersistentVolume 并不会被删除。要删除它必须通过手动方式来完成。
+
+- Pod 名称标签
+  - 当 StatefulSet 控制器（Controller） 创建 Pod 时， 它会添加一个标签 statefulset.kubernetes.io/pod-name，该标签值设置为 Pod 名称。 这个标签允许给 StatefulSet 中的特定 Pod 绑定一个 Service
+
+### 部署和扩缩保证
+
+- 对于包含 N 个 副本的 StatefulSet，当部署 Pod 时，它们是依次创建的，顺序为 0..N-1
+- 当删除 Pod 时，它们是逆序终止的，顺序为 N-1..0
+- 在将缩放操作应用到 Pod 之前，它前面的所有 Pod 必须是 Running 和 Ready 状态
+- 在 Pod 终止之前，所有的继任者必须完全关闭
+
+### 更新策略
+
+- StatefulSet 的 .spec.updateStrategy 字段让 你可以配置和禁用掉自动滚动更新 Pod 的容器、标签、资源请求或限制、以及注解
+- 当 StatefulSet 的 .spec.updateStrategy.type 设置为 OnDelete 时，它的控制器将不会自动更新 StatefulSet 中的 Pod。 用户必须手动删除 Pod 以便让控制器创建新的 Pod，以此来对 StatefulSet 的 .spec.template 的变动作出反应
+
+- 滚动更新
+  - RollingUpdate 更新策略对 StatefulSet 中的 Pod 执行自动的滚动更新。 在没有声明 .spec.updateStrategy 时，RollingUpdate 是默认配置。 当 StatefulSet 的 .spec.updateStrategy.type 被设置为 RollingUpdate 时， StatefulSet 控制器会删除和重建 StatefulSet 中的每个 Pod。 它将按照与 Pod 终止相同的顺序（从最大序号到最小序号）进行，每次更新一个 Pod。 它会等到被更新的 Pod 进入 Running 和 Ready 状态，然后再更新其前身
+
+  - 分区
+    - 通过声明 .spec.updateStrategy.rollingUpdate.partition 的方式，RollingUpdate 更新策略可以实现分区
+    - 如果声明了一个分区，当 StatefulSet 的 .spec.template 被更新时， 所有序号大于等于该分区序号的 Pod 都会被更新。 所有序号小于该分区序号的 Pod 都不会被更新，并且，即使他们被删除也会依据之前的版本进行重建
+    - 如果 StatefulSet 的 .spec.updateStrategy.rollingUpdate.partition 大于它的 .spec.replicas，对它的 .spec.template 的更新将不会传递到它的 Pod
+
+  - 强制回滚
+    - 在默认 Pod 管理策略(OrderedReady) 下使用 滚动更新 ，可能进入需要人工干预才能修复的损坏状态
+    - 如果更新后 Pod 模板配置进入无法运行或就绪的状态（例如，由于错误的二进制文件 或应用程序级配置错误），StatefulSet 将停止回滚并等待
+    - 在这种状态下，仅将 Pod 模板还原为正确的配置是不够的，StatefulSet 将继续等待损坏状态的 Pod 准备就绪（永远不会发生），然后再尝试将其恢复为正常工作配置
+    - 恢复模板后，还必须删除 StatefulSet 尝试使用错误的配置来运行的 Pod。这样， StatefulSet 才会开始使用被还原的模板来重新创建 Pod
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
