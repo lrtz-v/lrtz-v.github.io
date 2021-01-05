@@ -607,3 +607,37 @@ spec:
   - 类似可以指定 .spec.template.spec.affinity，之后 DaemonSet 控制器 将在能够与节点亲和性 匹配的节点上创建 Pod
 
 ### Daemon Pods 调度
+
+- DaemonSet 确保所有符合条件的节点都运行该 Pod 的一个副本
+- DaemonSet Pods 由 DaemonSet 控制器创建和调度，带来了以下问题
+  - Pod 行为的不一致性：正常 Pod 在被创建后等待调度时处于 Pending 状态， DaemonSet Pods 创建后不会处于 Pending 状态下。这使用户感到困惑
+  - Pod 抢占 由默认调度器处理。启用抢占后，DaemonSet 控制器将在不考虑 Pod 优先级和抢占 的情况下制定调度决策
+- ScheduleDaemonSetPods 允许您使用默认调度器而不是 DaemonSet 控制器来调度 DaemonSets，方法是将 NodeAffinity 条件而不是 .spec.nodeName 条件添加到 DaemonSet Pods
+- 默认调度器接下来将 Pod 绑定到目标主机
+  - 如果 DaemonSet Pod 的节点亲和性配置已存在，则被替换
+  - DaemonSet 控制器仅在创建或修改 DaemonSet Pod 时执行这些操作， 并且不会更改 DaemonSet 的 spec.template
+- 系统会自动添加 node.kubernetes.io/unschedulable：NoSchedule 容忍度到 DaemonSet Pods。在调度 DaemonSet Pod 时，默认调度器会忽略 unschedulable 节点
+
+```yaml
+nodeAffinity:
+  requiredDuringSchedulingIgnoredDuringExecution:
+    nodeSelectorTerms:
+    - matchFields:
+      - key: metadata.name
+        operator: In
+        values:
+        - target-host-name
+```
+
+### 与 Daemon Pods 通信
+
+- 推送（Push）：配置 DaemonSet 中的 Pod，将更新发送到另一个服务，例如统计数据库。 这些服务没有客户端
+- NodeIP 和已知端口：DaemonSet 中的 Pod 可以使用 hostPort，从而可以通过节点 IP 访问到 Pod。客户端能通过某种方法获取节点 IP 列表，并且基于此也可以获取到相应的端口
+- DNS：创建具有相同 Pod 选择算符的 无头服务， 通过使用 endpoints 资源或从 DNS 中检索到多个 A 记录来发现 DaemonSet
+- Service：创建具有相同 Pod 选择算符的服务，并使用该服务随机访问到某个节点上的 守护进程（没有办法访问到特定节点）
+
+### 更新 DaemonSet
+
+- 如果节点的标签被修改，DaemonSet 将立刻向新匹配上的节点添加 Pod， 同时删除不匹配的节点上的 Pod
+- 你可以修改 DaemonSet 创建的 Pod。不过并非 Pod 的所有字段都可更新
+- 可以删除一个 DaemonSet
