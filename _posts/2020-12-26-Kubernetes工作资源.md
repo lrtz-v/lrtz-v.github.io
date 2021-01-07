@@ -641,3 +641,242 @@ nodeAffinity:
 - 如果节点的标签被修改，DaemonSet 将立刻向新匹配上的节点添加 Pod， 同时删除不匹配的节点上的 Pod
 - 你可以修改 DaemonSet 创建的 Pod。不过并非 Pod 的所有字段都可更新
 - 可以删除一个 DaemonSet
+
+## Job
+
+- Job 会创建一个或者多个 Pods，并确保指定数量的 Pods 成功终止
+- 随着 Pods 成功结束，Job 跟踪记录成功完成的 Pods 个数。 当数量达到指定的成功个数阈值时，任务（即 Job）结束。 删除 Job 的操作会清除所创建的全部 Pods
+
+### Job示例
+
+- 计算 π 到小数点后 100 位，并将结果打印出来
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: resouer/ubuntu-bc
+        imagePullPolicy: Never
+        command: ["sh", "-c", "echo 'scale=100; 4*a(1)' | bc -l "]
+      restartPolicy: Never
+  backoffLimit: 4
+  activeDeadlineSeconds: 100
+```
+
+- kubectl logs $pods
+
+### 编写 Job 规约
+
+- Job 的并行执行
+  - 非并行 Job
+    - 通常只启动一个 Pod，除非该 Pod 失败
+    - 当 Pod 成功终止时，立即视 Job 为完成状态
+    - 可以不设置 spec.completions 和 spec.parallelism。 这两个属性都不设置时，均取默认值 1
+  - 具有 确定完成计数 的并行 Job
+    - .spec.completions 为所需要的完成个数，若不设置 spec.completions，默认值为 .spec.parallelism，其默认值为 1
+    - Job 用来代表整个任务，当对应于 1 和 .spec.completions 之间的每个整数都存在 一个成功的 Pod 时，Job 被视为完成
+    - 尚未实现：每个 Pod 收到一个介于 1 和 spec.completions 之间的不同索引值
+  - 带 工作队列 的并行 Job
+    - 不可以设置 .spec.completions，但要将.spec.parallelism 设置为一个非负整数
+    - 多个 Pod 之间必须相互协调，或者借助外部服务确定每个 Pod 要处理哪个工作条目。 例如，任一 Pod 都可以从工作队列中取走最多 N 个工作条目
+    - 每个 Pod 都可以独立确定是否其它 Pod 都已完成，进而确定 Job 是否完成
+    - 当 Job 中 任何 Pod 成功终止，不再创建新 Pod
+    - 一旦至少 1 个 Pod 成功完成，并且所有 Pod 都已终止，即可宣告 Job 成功完成
+    - 一旦任何 Pod 成功退出，任何其它 Pod 都不应再对此任务执行任何操作或生成任何输出。 所有 Pod 都应启动退出过程
+
+- 控制并行性
+  - 并行性请求（.spec.parallelism）可以设置为任何非负整数。 如果未设置，则默认为 1。 如果设置为 0，则 Job 相当于启动之后便被暂停，直到此值被增加
+  - 实际并行性（在任意时刻运行状态的 Pods 个数）可能比并行性请求略大或略小， 原因如下
+    - 对于 确定完成计数 Job，实际上并行执行的 Pods 个数不会超出剩余的完成数。 如果 .spec.parallelism 值较高，会被忽略。
+    - 对于 工作队列 Job，有任何 Job 成功结束之后，不会有新的 Pod 启动。 不过，剩下的 Pods 允许执行完毕。
+    - 如果 Job 控制器 没有来得及作出响应，或者
+    - 如果 Job 控制器因为任何原因（例如，缺少 ResourceQuota 或者没有权限）无法创建 Pods。 Pods 个数可能比请求的   - 数目小。
+    - Job 控制器可能会因为之前同一 Job 中 Pod 失效次数过多而压制新 Pod 的创建。
+    - 当 Pod 处于体面终止进程中，需要一定时间才能停止。
+
+### 处理 Pod 和容器失效
+
+- Pod 中的容器可能因为多种不同原因失效
+  - .spec.template.spec.restartPolicy = "OnFailure"
+    - Pod 则继续留在当前节点，但容器会被重新运行
+  - .spec.template.spec.restartPolicy = "Never"
+    - Job 控制器会启动一个新的 Pod
+
+- 即使将 .spec.parallelism 设置为 1，且将 .spec.completions 设置为 1，并且 .spec.template.spec.restartPolicy 设置为 "Never"，同一程序仍然有可能被启动两次
+
+- Pod 回退失效策略
+  - 在有些情形下，我们可能希望 Job 在经历若干次重试之后直接进入失败状态，因为这很可能意味着遇到了配置错误
+  - 可以将 .spec.backoffLimit 设置为视 Job 为失败之前的重试次数，失效回退的限制值默认为 6，一旦重试次数到达 .spec.backoffLimit 所设的上限，Job 会被标记为失败， 其中运行的 Pods 都会被终止
+  - 与 Job 相关的失效的 Pod 会被 Job 控制器重建，并且以指数型回退计算重试延迟 （从 10 秒、20 秒到 40 秒，最多 6 分钟）。 当 Job 的 Pod 被删除时，或者 Pod 成功时没有其它 Pod 处于失败状态，失效回退的次数也会被重置（为 0）
+
+### Job 终止与清理
+
+- Job 完成时不会再创建新的 Pod，不过已有的 Pod 也不会被删除。 保留这些 Pod 使得你可以查看已完成的 Pod 的日志输出，以便检查错误、警告 或者其它诊断性输出
+
+- 你可以为 Job 的 .spec.activeDeadlineSeconds 设置一个秒数值，值适用于 Job 的整个生命期，无论 Job 创建了多少个 Pod。 一旦 Job 运行时间达到 activeDeadlineSeconds 秒，其所有运行中的 Pod 都会被终止，并且 Job 的状态更新为 type: Failed 及 reason: DeadlineExceeded
+  - Job 的 .spec.activeDeadlineSeconds 优先级高于其 .spec.backoffLimit 设置
+
+### 自动清理完成的 Job
+
+- 如果 Job 由某种更高级别的控制器来管理，例如 CronJobs， 则 Job 可以被 CronJob 基于特定的根据容量裁定的清理策略清理掉
+
+- 使用由 TTL 控制器所提供 的 TTL 机制自动清理 Job
+  - 设置 Job 的 .spec.ttlSecondsAfterFinished 字段，可以让该控制器清理掉 已结束的资源
+  - 如果该字段设置为 0，Job 在结束之后立即成为可被自动删除的对象
+
+   ```yaml
+    apiVersion: batch/v1
+    kind: Job
+    metadata:
+      name: pi
+    spec:
+      template:
+        spec:
+          containers:
+          - name: pi
+            image: resouer/ubuntu-bc
+            imagePullPolicy: Never
+            command: ["sh", "-c", "echo 'scale=100; 4*a(1)' | bc -l "]
+          restartPolicy: Never
+      backoffLimit: 4
+      activeDeadlineSeconds: 100
+      ttlSecondsAfterFinished: 100
+   ```
+
+## CronJob
+
+- Cron Job 创建基于时间调度的 Jobs，对于创建周期性的、反复重复的任务很有用，例如执行数据备份或者发送邮件。 CronJobs 也可以用来计划在指定时间来执行的独立任务，例如计划当集群看起来很空闲时 执行某个 Job
+
+### CronJob 示例
+
+```yaml
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: hello
+spec:
+  schedule: "*/1 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            args:
+            - /bin/sh
+            - -c
+            - date; echo Hello from the Kubernetes cluster
+          restartPolicy: OnFailure
+```
+
+### CronJob 限制
+
+- CronJob 根据其计划编排，在每次该执行任务的时候大约会创建一个 Job
+  - 在某些情况下，可能会创建两个 Job，或者不会创建任何 Job
+  - 如果 startingDeadlineSeconds 设置为很大的数值或未设置（默认），并且 concurrencyPolicy 设置为 Allow，则作业将始终至少运行一次；如果 startingDeadlineSeconds 是 200，则控制器会统计在过去 200 秒中错过了多少次 Job
+  - CronJob 控制器（Controller） 检查从上一次调度的时间点到现在所错过了调度次数。如果错过的调度次数超过 100 次， 那么它就不会启动这个任务，并记录这个错误
+  - 未能在调度时间内创建 CronJob，则计为错过
+
+### CronJonV2
+
+- --feature-gates="CronJobControllerV2=true"
+
+## 资源回收
+
+### 宿主与附属
+
+- 每个附属对象具有一个指向其所属对象的 metadata.ownerReferences 字段
+
+```yaml
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: my-repset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      pod-is-for: garbage-collection-example
+  template:
+    metadata:
+      labels:
+        pod-is-for: garbage-collection-example
+    spec:
+      containers:
+      - name: app
+        image: app:1.0.0
+        imagePullPolicy: Never
+```
+
+- 通过 kubectl get pods --output=yaml | vim 查看 ownerReferences
+  - 显示了 Pod 的属主是名为 my-repset 的 ReplicaSet
+
+    ```yaml
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: my-repset
+      uid: 00c1a24c-1418-4c3b-be9d-326915144427
+    ```
+
+### 控制垃圾收集器删除附属
+
+- 当你删除对象时，可以指定该对象的附属是否也自动删除
+  - 不自动删除它的附属，这些附属被称作 孤立对象（Orphaned）
+  - 自动删除附属的行为也称为 级联删除（Cascading Deletion）
+    - 级联删除模式
+      - 后台（Background） 模式
+      - 前台（Foreground） 模式
+
+- 前台级联删除
+  - 根对象首先进入 deletion in progress 状态。 在 deletion in progress 状态，会有如下的情况
+    - 对象仍然可以通过 REST API 可见
+    - 对象的 deletionTimestamp 字段被设置
+    - 对象的 metadata.finalizers 字段包含值 foregroundDeletion
+  - 一旦对象被设置为 deletion in progress 状态，垃圾收集器会删除对象的所有附属
+  - 垃圾收集器在删除了所有有阻塞能力的附属（对象的 ownerReference.blockOwnerDeletion=true） 之后，删除属主对象
+  - 只有设置了 ownerReference.blockOwnerDeletion 值的附属才能阻止删除属主对象
+- 后台级联删除
+  - Kubernetes 会立即删除属主对象，之后垃圾收集器 会在后台删除其附属对象
+
+- 设置级联删除策略
+  - 通过为属主对象设置 deleteOptions.propagationPolicy 字段，可以控制级联删除策略
+  - 可能的取值包括：Orphan、Foreground 或者 Background
+
+- 示例
+
+```bash
+下面是一个在后台删除附属对象的示例：
+
+kubectl proxy --port=8080
+curl -X DELETE localhost:8080/apis/apps/v1/namespaces/default/replicasets/my-repset \
+  -d '{"kind":"DeleteOptions","apiVersion":"v1","propagationPolicy":"Background"}' \
+  -H "Content-Type: application/json"
+
+下面是一个在前台中删除附属对象的示例：
+
+kubectl proxy --port=8080
+curl -X DELETE localhost:8080/apis/apps/v1/namespaces/default/replicasets/my-repset \
+  -d '{"kind":"DeleteOptions","apiVersion":"v1","propagationPolicy":"Foreground"}' \
+  -H "Content-Type: application/json"
+
+下面是一个令附属成为孤立对象的示例：
+
+kubectl proxy --port=8080
+curl -X DELETE localhost:8080/apis/apps/v1/namespaces/default/replicasets/my-repset \
+  -d '{"kind":"DeleteOptions","apiVersion":"v1","propagationPolicy":"Orphan"}' \
+  -H "Content-Type: application/json"
+```
+
+- kubectl 命令也支持级联删除
+  - 通过设置 --cascade 为 true，可以使用 kubectl 自动删除附属对象
+  - 设置 --cascade 为 false，会使附属对象成为孤立附属对象。 --cascade 的默认值是 true
