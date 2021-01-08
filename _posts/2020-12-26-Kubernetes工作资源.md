@@ -815,7 +815,7 @@ spec:
         imagePullPolicy: Never
 ```
 
-- 通过 kubectl get pods --output=yaml | vim 查看 ownerReferences
+- 通过 kubectl get pods --output=yaml 查看 ownerReferences
   - 显示了 Pod 的属主是名为 my-repset 的 ReplicaSet
 
     ```yaml
