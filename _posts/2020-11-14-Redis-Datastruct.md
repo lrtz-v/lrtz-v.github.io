@@ -2,6 +2,7 @@
 title: Redis数据结构
 date: 2020-11-14 20:30:01
 tags: [Redis]
+description: Redis数据结构简介
 ---
 
 # Redis 数据结构

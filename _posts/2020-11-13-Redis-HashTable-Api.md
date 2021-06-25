@@ -1,7 +1,8 @@
 ---
-title: Redis-Hash-接口
+title: Redis-Hash
 date: 2020-11-13 20:30:01
 tags: [Redis]
+description: Redis Hash数据接口源码分析
 ---
 
 # Redis-HashTable-接口

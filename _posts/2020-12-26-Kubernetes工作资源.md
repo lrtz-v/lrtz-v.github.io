@@ -2,6 +2,7 @@
 title: Kubernetes工作资源
 date: 2020-12-26 20:30:01
 tags: [k8s, Kubernetes, kubernetes]
+description: Kubernetes工作资源介绍
 ---
 
 # Kubernetes 工作资源
@@ -77,20 +78,10 @@ spec:
       lifecycle:
         postStart:
           exec:
-            command:
-              [
-                "/bin/sh",
-                "-c",
-                "echo Hello Test Start> /tmp/mylog",
-              ]
+            command: ["/bin/sh", "-c", "echo Hello Test Start> /tmp/mylog"]
         preStop:
           exec:
-            command:
-              [
-                "/bin/sh",
-                "-c",
-                "echo Hello Test End> /tmp/app/mylog",
-              ]
+            command: ["/bin/sh", "-c", "echo Hello Test End> /tmp/app/mylog"]
       volumeMounts:
         - mountPath: /tmp/app
           name: app-volume
@@ -135,9 +126,9 @@ spec:
         tier: app-rs
     spec:
       containers:
-      - name: app
-        image: app:1.0.0
-        imagePullPolicy: Never
+        - name: app
+          image: app:1.0.0
+          imagePullPolicy: Never
 ```
 
 - ReplicaSet 可以被 HPA 自动缩放
@@ -180,10 +171,10 @@ spec:
         app: app
     spec:
       containers:
-      - name: app
-        image: app:1.0.0
-        ports:
-        - containerPort: 8080
+        - name: app
+          image: app:1.0.0
+          ports:
+            - containerPort: 8080
 ```
 
 ```bash
@@ -205,19 +196,20 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
 ### 更新 Deplyment
 
 - 更新镜像
-  - 方式1
+
+  - 方式 1
 
     ```bash
     kubectl --record deployment.v1.apps/app-deployment set image deployment.v1.apps/app-deployment app=app:1.0.1
     ```
 
-  - 方式2
+  - 方式 2
 
     ```bash
     kubectl set image deployment/app-deployment app=app:1.0.2 --record
     ```
 
-  - 方式3
+  - 方式 3
 
     ```bash
     kubectl edit deployment.v1.apps/app-deployment
@@ -249,7 +241,7 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
 ### 回滚 Deployment
 
 - 检查上线版本
-  
+
   ```bash
   ➜  ~: kubectl rollout history deployment.v1.apps/app-deployment
   deployment.apps/app-deployment
@@ -291,7 +283,7 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
   ```
 
   - 会滚到指定版本
-  
+
   ```bash
   ➜  ~: kubectl rollout undo deployment.v1.apps/app-deployment --to-revision=2
   deployment.apps/app-deployment rolled back
@@ -300,6 +292,7 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
 ### 缩放 Deployment
 
 - 缩放
+
   - 命令
 
     ```bash
@@ -325,7 +318,7 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
   ```bash
   ➜  ~: kubectl rollout pause deployment.v1.apps/app-deployment
   deployment.apps/app-deployment paused
-  
+
   ➜  ~: kubectl set resources deployment.v1.apps/app-deployment -c=app --limits=cpu=200m,memory=512Mi
   deployment.apps/app-deployment resource requirements updated
 
@@ -339,12 +332,13 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
 ### Deployment 状态
 
 - 状态查询
-  
+
   ```bash
   ➜  ~: kubectl rollout status deployment.v1.apps/nginx-deployment
   ```
 
 - 进行中的 Deployment
+
   - 出现场景
     - Deployment 创建新的 ReplicaSet
     - Deployment 正在为其最新的 ReplicaSet 扩容
@@ -352,12 +346,14 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
     - 新的 Pods 已经就绪或者可用（就绪至少持续了 MinReadySeconds 秒）
 
 - 完成的 Deployment
+
   - 出现场景
     - 与 Deployment 关联的所有副本都已更新到指定的最新版本，这意味着之前请求的所有更新都已完成
     - 与 Deployment 关联的所有副本都可用
     - 未运行 Deployment 的旧副本
 
 - 失败的 Deployment
+
   - Deployment 可能一直处于未完成状态，出现场景如下
     - 配额（Quota）不足
     - 就绪探测（Readiness Probe）失败
@@ -366,6 +362,7 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
     - 限制范围（Limit Ranges）问题
     - 应用程序运行时的配置错误
   - 检测方式
+
     - 在 Deployment 规约中指定截止时间参数：.spec.progressDeadlineSeconds
 
     ```bash
@@ -393,38 +390,46 @@ app-deployment-77d4987499-h2qsm   1/1     Running   0          23s
 - apiVersion，kind 和 metadata
 
 - Pod 模板
+
   - .spec 中只有 .spec.template 和 .spec.selector 是必需的字段
     - .spec.template 是一个 Pod 模板
 
 - 副本
-  - .spec.replicas 是指定所需 Pod 的可选字段。它的默认值是1
+
+  - .spec.replicas 是指定所需 Pod 的可选字段。它的默认值是 1
 
 - 选择算符
+
   - .spec.selector 是指定本 Deployment 的 Pod 标签选择算符的必需字段
     - 必须匹配 .spec.template.metadata.labels，否则请求会被 API 拒绝
 
 - 策略
+
   - .spec.strategy 策略指定用于用新 Pods 替换旧 Pods 的策略
   - .spec.strategy.type 可以是 “Recreate” 或 “RollingUpdate”(默认)
 
   - 重新创建 Deployment
+
     - 如果 .spec.strategy.type==Recreate，在创建新 Pods 之前，所有现有的 Pods 会被杀死
 
   - 滚动更新 Deployment
-    - Deployment 会在 .spec.strategy.type==RollingUpdate时，采取滚动更新的方式更新 Pods，可以指定 maxUnavailable 和 maxSurge 来控制滚动更新过程
+    - Deployment 会在 .spec.strategy.type==RollingUpdate 时，采取滚动更新的方式更新 Pods，可以指定 maxUnavailable 和 maxSurge 来控制滚动更新过程
       - maxUnavailable
         - .spec.strategy.rollingUpdate.maxUnavailable 是一个可选字段，用来指定 更新过程中不可用的 Pod 的个数上限；该值可以是绝对数字（例如，5），也可以是 所需 Pods 的百分比（例如，10%）。百分比值会转换成绝对数并去除小数部分。 如果 .spec.strategy.rollingUpdate.maxSurge 为 0，则此值不能为 0。 默认值为 25%
       - maxSurge
         - .spec.strategy.rollingUpdate.maxSurge 是一个可选字段，用来指定可以创建的超出 期望 Pod 个数的 Pod 数量。此值可以是绝对数（例如，5）或所需 Pods 的百分比（例如，10%）。 如果 MaxUnavailable 为 0，则此值不能为 0。百分比值会通过向上取整转换为绝对数。 此字段的默认值为 25%
 
 - 进度期限秒数
+
   - .spec.progressDeadlineSeconds 是一个可选字段，用于指定系统在报告 Deployment 进展失败 之前等待 Deployment 取得进展的秒数
   - 如果指定，则此字段值需要大于 .spec.minReadySeconds 取值
 
 - 最短就绪时间
+
   - .spec.minReadySeconds 是一个可选字段，用于指定新创建的 Pod 在没有任意容器崩溃情况下的最小就绪时间， 只有超出这个时间 Pod 才被视为可用。默认值为 0（Pod 在准备就绪后立即将被视为可用）
 
 - 修订历史限制
+
   - Deployment 的修订历史记录存储在它所控制的 ReplicaSets 中
   - .spec.revisionHistoryLimit 是一个可选字段，用来设定出于会滚目的所要保留的旧 ReplicaSet 数量。 这些旧 ReplicaSet 会消耗 etcd 中的资源，并占用 kubectl get rs 的输出
   - 每个 Deployment 修订版本的配置都存储在其 ReplicaSets 中；因此，一旦删除了旧的 ReplicaSet， 将失去回滚到 Deployment 的对应修订版本的能力。 默认情况下，系统保留 10 个旧 ReplicaSet，但其理想值取决于新 Deployment 的频率和稳定性
@@ -462,12 +467,11 @@ spec:
     app: app
   clusterIP: None
   ports:
-  - name: default
-    protocol: TCP
-    port: 8080
-    targetPort: 8080
+    - name: default
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
 ---
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -485,12 +489,12 @@ spec:
     spec:
       terminationGracePeriodSeconds: 10
       containers:
-      - name: app
-        image: app:1.0.3
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8080
-          name: app
+        - name: app
+          image: app:1.0.3
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+              name: app
 ```
 
 ### Pod 选择算符
@@ -502,14 +506,17 @@ spec:
 - StatefulSet Pod 具有唯一的标识，该标识包括顺序标识、稳定的网络标识和稳定的存储。 该标识和 Pod 是绑定的，不管它被调度在哪个节点上
 
 - 有序索引
+
   - 对于具有 N 个副本的 StatefulSet，StatefulSet 中的每个 Pod 将被分配一个整数序号， 从 0 到 N-1，该序号在 StatefulSet 上是唯一的
 
 - 稳定的网络 ID
+
   - StatefulSet 中的每个 Pod 根据 StatefulSet 的名称和 Pod 的序号派生出它的主机名
   - 组合主机名的格式为$(StatefulSet 名称)-$(序号)
   - StatefulSet 可以使用 Headless Service 控制它的 Pod 的网络域。管理域的这个服务的格式为： $(服务名称).$(命名空间).svc.cluster.local，其中 cluster.local 是集群域。 一旦每个 Pod 创建成功，就会得到一个匹配的 DNS 子域，格式为： $(pod 名称).$(所属服务的 DNS 域名)，其中所属服务由 StatefulSet 的 serviceName 域来设定。
 
 - 稳定的存储
+
   - Kubernetes 为每个 VolumeClaimTemplate 创建一个 PersistentVolume
   - 在上面的示例中，每个 Pod 将会得到基于 StorageClass my-storage-class 提供的 1 Gib 的 PersistentVolume。如果没有声明 StorageClass，就会使用默认的 StorageClass。 当一个 Pod 被调度（重新调度）到节点上时，它的 volumeMounts 会挂载与其 PersistentVolumeClaims 相关联的 PersistentVolume。 请注意，当 Pod 或者 StatefulSet 被删除时，与 PersistentVolumeClaims 相关联的 PersistentVolume 并不会被删除。要删除它必须通过手动方式来完成。
 
@@ -529,9 +536,11 @@ spec:
 - 当 StatefulSet 的 .spec.updateStrategy.type 设置为 OnDelete 时，它的控制器将不会自动更新 StatefulSet 中的 Pod。 用户必须手动删除 Pod 以便让控制器创建新的 Pod，以此来对 StatefulSet 的 .spec.template 的变动作出反应
 
 - 滚动更新
+
   - RollingUpdate 更新策略对 StatefulSet 中的 Pod 执行自动的滚动更新。 在没有声明 .spec.updateStrategy 时，RollingUpdate 是默认配置。 当 StatefulSet 的 .spec.updateStrategy.type 被设置为 RollingUpdate 时， StatefulSet 控制器会删除和重建 StatefulSet 中的每个 Pod。 它将按照与 Pod 终止相同的顺序（从最大序号到最小序号）进行，每次更新一个 Pod。 它会等到被更新的 Pod 进入 Running 和 Ready 状态，然后再更新其前身
 
   - 分区
+
     - 通过声明 .spec.updateStrategy.rollingUpdate.partition 的方式，RollingUpdate 更新策略可以实现分区
     - 如果声明了一个分区，当 StatefulSet 的 .spec.template 被更新时， 所有序号大于等于该分区序号的 Pod 都会被更新。 所有序号小于该分区序号的 Pod 都不会被更新，并且，即使他们被删除也会依据之前的版本进行重建
     - 如果 StatefulSet 的 .spec.updateStrategy.rollingUpdate.partition 大于它的 .spec.replicas，对它的 .spec.template 的更新将不会传递到它的 Pod
@@ -572,34 +581,35 @@ spec:
         name: fluentd-elasticsearch
     spec:
       tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
       containers:
-      - name: fluentd-elasticsearch
-        image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
-        resources:
-          limits:
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 200Mi
-        volumeMounts:
-        - name: varlog
-          mountPath: /var/log
-        - name: varlibdockercontainers
-          mountPath: /var/lib/docker/containers
-          readOnly: true
+        - name: fluentd-elasticsearch
+          image: quay.io/fluentd_elasticsearch/fluentd:v2.5.2
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              cpu: 100m
+              memory: 200Mi
+          volumeMounts:
+            - name: varlog
+              mountPath: /var/log
+            - name: varlibdockercontainers
+              mountPath: /var/lib/docker/containers
+              readOnly: true
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: varlog
-        hostPath:
-          path: /var/log
-      - name: varlibdockercontainers
-        hostPath:
-          path: /var/lib/docker/containers
+        - name: varlog
+          hostPath:
+            path: /var/log
+        - name: varlibdockercontainers
+          hostPath:
+            path: /var/lib/docker/containers
 ```
 
 - Pod 模板
+
   - 在 DaemonSet 中的 Pod 模板必须具有一个值为 Always 的 RestartPolicy。 当该值未指定时，默认是 Always
 
 - 仅在某些节点上运行 Pod
@@ -622,11 +632,11 @@ spec:
 nodeAffinity:
   requiredDuringSchedulingIgnoredDuringExecution:
     nodeSelectorTerms:
-    - matchFields:
-      - key: metadata.name
-        operator: In
-        values:
-        - target-host-name
+      - matchFields:
+          - key: metadata.name
+            operator: In
+            values:
+              - target-host-name
 ```
 
 ### 与 Daemon Pods 通信
@@ -647,7 +657,7 @@ nodeAffinity:
 - Job 会创建一个或者多个 Pods，并确保指定数量的 Pods 成功终止
 - 随着 Pods 成功结束，Job 跟踪记录成功完成的 Pods 个数。 当数量达到指定的成功个数阈值时，任务（即 Job）结束。 删除 Job 的操作会清除所创建的全部 Pods
 
-### Job示例
+### Job 示例
 
 - 计算 π 到小数点后 100 位，并将结果打印出来
 
@@ -660,10 +670,10 @@ spec:
   template:
     spec:
       containers:
-      - name: pi
-        image: resouer/ubuntu-bc
-        imagePullPolicy: Never
-        command: ["sh", "-c", "echo 'scale=100; 4*a(1)' | bc -l "]
+        - name: pi
+          image: resouer/ubuntu-bc
+          imagePullPolicy: Never
+          command: ["sh", "-c", "echo 'scale=100; 4*a(1)' | bc -l "]
       restartPolicy: Never
   backoffLimit: 4
   activeDeadlineSeconds: 100
@@ -674,6 +684,7 @@ spec:
 ### 编写 Job 规约
 
 - Job 的并行执行
+
   - 非并行 Job
     - 通常只启动一个 Pod，除非该 Pod 失败
     - 当 Pod 成功终止时，立即视 Job 为完成状态
@@ -696,13 +707,14 @@ spec:
     - 对于 确定完成计数 Job，实际上并行执行的 Pods 个数不会超出剩余的完成数。 如果 .spec.parallelism 值较高，会被忽略。
     - 对于 工作队列 Job，有任何 Job 成功结束之后，不会有新的 Pod 启动。 不过，剩下的 Pods 允许执行完毕。
     - 如果 Job 控制器 没有来得及作出响应，或者
-    - 如果 Job 控制器因为任何原因（例如，缺少 ResourceQuota 或者没有权限）无法创建 Pods。 Pods 个数可能比请求的   - 数目小。
+    - 如果 Job 控制器因为任何原因（例如，缺少 ResourceQuota 或者没有权限）无法创建 Pods。 Pods 个数可能比请求的 - 数目小。
     - Job 控制器可能会因为之前同一 Job 中 Pod 失效次数过多而压制新 Pod 的创建。
     - 当 Pod 处于体面终止进程中，需要一定时间才能停止。
 
 ### 处理 Pod 和容器失效
 
 - Pod 中的容器可能因为多种不同原因失效
+
   - .spec.template.spec.restartPolicy = "OnFailure"
     - Pod 则继续留在当前节点，但容器会被重新运行
   - .spec.template.spec.restartPolicy = "Never"
@@ -727,27 +739,28 @@ spec:
 - 如果 Job 由某种更高级别的控制器来管理，例如 CronJobs， 则 Job 可以被 CronJob 基于特定的根据容量裁定的清理策略清理掉
 
 - 使用由 TTL 控制器所提供 的 TTL 机制自动清理 Job
+
   - 设置 Job 的 .spec.ttlSecondsAfterFinished 字段，可以让该控制器清理掉 已结束的资源
   - 如果该字段设置为 0，Job 在结束之后立即成为可被自动删除的对象
 
-   ```yaml
-    apiVersion: batch/v1
-    kind: Job
-    metadata:
-      name: pi
-    spec:
-      template:
-        spec:
-          containers:
+  ```yaml
+  apiVersion: batch/v1
+  kind: Job
+  metadata:
+    name: pi
+  spec:
+    template:
+      spec:
+        containers:
           - name: pi
             image: resouer/ubuntu-bc
             imagePullPolicy: Never
             command: ["sh", "-c", "echo 'scale=100; 4*a(1)' | bc -l "]
-          restartPolicy: Never
-      backoffLimit: 4
-      activeDeadlineSeconds: 100
-      ttlSecondsAfterFinished: 100
-   ```
+        restartPolicy: Never
+    backoffLimit: 4
+    activeDeadlineSeconds: 100
+    ttlSecondsAfterFinished: 100
+  ```
 
 ## CronJob
 
@@ -767,12 +780,12 @@ spec:
       template:
         spec:
           containers:
-          - name: hello
-            image: busybox
-            args:
-            - /bin/sh
-            - -c
-            - date; echo Hello from the Kubernetes cluster
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - -c
+                - date; echo Hello from the Kubernetes cluster
           restartPolicy: OnFailure
 ```
 
@@ -810,27 +823,29 @@ spec:
         pod-is-for: garbage-collection-example
     spec:
       containers:
-      - name: app
-        image: app:1.0.0
-        imagePullPolicy: Never
+        - name: app
+          image: app:1.0.0
+          imagePullPolicy: Never
 ```
 
 - 通过 kubectl get pods --output=yaml 查看 ownerReferences
+
   - 显示了 Pod 的属主是名为 my-repset 的 ReplicaSet
 
     ```yaml
     ownerReferences:
-    - apiVersion: apps/v1
-      blockOwnerDeletion: true
-      controller: true
-      kind: ReplicaSet
-      name: my-repset
-      uid: 00c1a24c-1418-4c3b-be9d-326915144427
+      - apiVersion: apps/v1
+        blockOwnerDeletion: true
+        controller: true
+        kind: ReplicaSet
+        name: my-repset
+        uid: 00c1a24c-1418-4c3b-be9d-326915144427
     ```
 
 ### 控制垃圾收集器删除附属
 
 - 当你删除对象时，可以指定该对象的附属是否也自动删除
+
   - 不自动删除它的附属，这些附属被称作 孤立对象（Orphaned）
   - 自动删除附属的行为也称为 级联删除（Cascading Deletion）
     - 级联删除模式
@@ -846,9 +861,11 @@ spec:
   - 垃圾收集器在删除了所有有阻塞能力的附属（对象的 ownerReference.blockOwnerDeletion=true） 之后，删除属主对象
   - 只有设置了 ownerReference.blockOwnerDeletion 值的附属才能阻止删除属主对象
 - 后台级联删除
+
   - Kubernetes 会立即删除属主对象，之后垃圾收集器 会在后台删除其附属对象
 
 - 设置级联删除策略
+
   - 通过为属主对象设置 deleteOptions.propagationPolicy 字段，可以控制级联删除策略
   - 可能的取值包括：Orphan、Foreground 或者 Background
 
