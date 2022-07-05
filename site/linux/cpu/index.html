@@ -8,19 +8,19 @@
       
       
       
-      <link rel="icon" href="/assets/images/favicon.png">
+      <link rel="icon" href="../../assets/images/favicon.png">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.3.9">
     
     
       
-        <title>LRTZ</title>
+        <title>Cpu分析 - LRTZ</title>
       
     
     
-      <link rel="stylesheet" href="/assets/stylesheets/main.1d29e8d0.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.1d29e8d0.min.css">
       
         
-        <link rel="stylesheet" href="/assets/stylesheets/palette.cbb835fc.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
         
       
       
@@ -36,9 +36,9 @@
       
     
     
-      <link rel="stylesheet" href="/stylesheets/extra.css">
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
     
-    <script>__md_scope=new URL("/",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    <script>__md_scope=new URL("../..",location),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
     
       
 
@@ -65,6 +65,11 @@
     <label class="md-overlay" for="__drawer"></label>
     <div data-md-component="skip">
       
+        
+        <a href="#cpu" class="md-skip">
+          Skip to content
+        </a>
+      
     </div>
     <div data-md-component="announce">
       
@@ -77,9 +82,9 @@
 
 <header class="md-header md-header--lifted" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="/." title="LRTZ" class="md-header__button md-logo" aria-label="LRTZ" data-md-component="logo">
+    <a href="../.." title="LRTZ" class="md-header__button md-logo" aria-label="LRTZ" data-md-component="logo">
       
-  <img src="/assets/favicon.ico" alt="logo">
+  <img src="../../assets/favicon.ico" alt="logo">
 
     </a>
     <label class="md-header__button md-icon" for="__drawer">
@@ -95,7 +100,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              
+              Cpu分析
             
           </span>
         </div>
@@ -186,7 +191,7 @@
 
 
   <li class="md-tabs__item">
-    <a href="/." class="md-tabs__link">
+    <a href="../.." class="md-tabs__link">
       Home
     </a>
   </li>
@@ -201,7 +206,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/Develop/git/" class="md-tabs__link">
+      <a href="../../Develop/git/" class="md-tabs__link">
         Develop
       </a>
     </li>
@@ -217,7 +222,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/K8S/basic/" class="md-tabs__link">
+      <a href="../../K8S/basic/" class="md-tabs__link">
         K8S
       </a>
     </li>
@@ -227,13 +232,15 @@
         
   
   
+    
+  
 
 
   
   
   
     <li class="md-tabs__item">
-      <a href="/linux/commands/" class="md-tabs__link">
+      <a href="../commands/" class="md-tabs__link md-tabs__link--active">
         Linux
       </a>
     </li>
@@ -249,7 +256,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="/Redis/redis/" class="md-tabs__link">
+      <a href="../../Redis/redis/" class="md-tabs__link">
         Redis
       </a>
     </li>
@@ -283,9 +290,9 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="/." title="LRTZ" class="md-nav__button md-logo" aria-label="LRTZ" data-md-component="logo">
+    <a href="../.." title="LRTZ" class="md-nav__button md-logo" aria-label="LRTZ" data-md-component="logo">
       
-  <img src="/assets/favicon.ico" alt="logo">
+  <img src="../../assets/favicon.ico" alt="logo">
 
     </a>
     LRTZ
@@ -313,7 +320,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/." class="md-nav__link">
+      <a href="../.." class="md-nav__link">
         Home
       </a>
     </li>
@@ -358,7 +365,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/Develop/git/" class="md-nav__link">
+      <a href="../../Develop/git/" class="md-nav__link">
         Git操作
       </a>
     </li>
@@ -414,7 +421,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/K8S/basic/" class="md-nav__link">
+      <a href="../../K8S/basic/" class="md-nav__link">
         基础
       </a>
     </li>
@@ -428,7 +435,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/K8S/resources/" class="md-nav__link">
+      <a href="../../K8S/resources/" class="md-nav__link">
         资源类型
       </a>
     </li>
@@ -442,7 +449,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/K8S/services/" class="md-nav__link">
+      <a href="../../K8S/services/" class="md-nav__link">
         网络及服务
       </a>
     </li>
@@ -462,12 +469,14 @@
 
   
   
+    
+  
   
     
-    <li class="md-nav__item md-nav__item--nested">
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
       
       
-        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
       
       
       
@@ -498,7 +507,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/linux/commands/" class="md-nav__link">
+      <a href="../commands/" class="md-nav__link">
         常用命令
       </a>
     </li>
@@ -512,7 +521,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/linux/centos_kernal_upgrade/" class="md-nav__link">
+      <a href="../centos_kernal_upgrade/" class="md-nav__link">
         Centos内核升级
       </a>
     </li>
@@ -524,11 +533,73 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="/linux/cpu/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Cpu分析
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Cpu分析
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    平均负载
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    上下文切换
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    进程调度时机
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu_1" class="md-nav__link">
+    CPU 使用率
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -580,7 +651,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/Redis/redis/" class="md-nav__link">
+      <a href="../../Redis/redis/" class="md-nav__link">
         简介
       </a>
     </li>
@@ -594,7 +665,7 @@
   
   
     <li class="md-nav__item">
-      <a href="/Redis/HashTable/" class="md-nav__link">
+      <a href="../../Redis/HashTable/" class="md-nav__link">
         HashTable
       </a>
     </li>
@@ -625,6 +696,44 @@
   
   
   
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    平均负载
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    上下文切换
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    进程调度时机
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cpu_1" class="md-nav__link">
+    CPU 使用率
+  </a>
+  
+</li>
+      
+    </ul>
   
 </nav>
                   </div>
@@ -635,7 +744,279 @@
           <div class="md-content" data-md-component="content">
             <article class="md-content__inner md-typeset">
               
-  <h1>404 - Not found</h1>
+
+                
+  <a href="https://github.com/lrtz-v/lrtz-v.github.io/edit/master/docs/linux/cpu.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+  
+
+  <nav class="md-tags" >
+    
+      
+        <a href="../../tags/#linux" class="md-tag">
+          Linux
+        </a>
+      
+    
+  </nav>
+
+
+
+<h1 id="cpu">CPU 分析</h1>
+<h2 id="_1">平均负载</h2>
+<ul>
+<li>执行 top 或者 uptime 命令，可以看到如下信息</li>
+</ul>
+<div class="highlight"><pre><span></span><code>  <span class="m">21</span>:40  up <span class="m">44</span> days, <span class="m">49</span> mins, <span class="m">3</span> users, load averages: <span class="m">2</span>.45 <span class="m">3</span>.11 <span class="m">3</span>.40
+</code></pre></div>
+<ul>
+<li>
+<p>信息含义</p>
+</li>
+<li>
+<p>当前时间</p>
+</li>
+<li>系统运行时间</li>
+<li>正在登录用户数</li>
+<li>
+<p>过去 1 分钟、5 分钟、15 分钟的平均负载（Load Average）</p>
+<ul>
+<li>简单来说，平均负载是指单位时间内，系统处于可运行状态和不可中断状态的平均进程数，也就是平均活跃进程数</li>
+<li>可运行状态的进程，是指正在使用 CPU 或者正在等待 CPU 的进程，也就是我们常用 ps 命令看到的，处于 R 状态（Running 或 Runnable）的进程</li>
+<li>不可中断状态的进程则是正处于内核态关键流程中的进程，并且这些流程是不可打断的，比如最常见的是等待硬件设备的 I/O 响应，也就是我们在 ps 命令中看到的 D 状态（Uninterruptible Sleep，也称为 Disk Sleep）的进程</li>
+<li>但它实际上是活跃进程数的指数衰减平均值</li>
+</ul>
+</li>
+<li>
+<p>注意</p>
+</li>
+<li>平均负载高有可能是 CPU 密集型进程导致的</li>
+<li>平均负载高并不一定代表 CPU 使用率高，还有可能是 I/O 更繁忙了</li>
+<li>当发现负载高的时候，你可以使用 mpstat、pidstat 等工具，辅助分析负载的来源</li>
+</ul>
+<h2 id="_2">上下文切换</h2>
+<ul>
+<li>
+<p>进程上下文切换</p>
+</li>
+<li>
+<p>系统调用，完成从用户态到内核态的转变</p>
+<ul>
+<li>CPU 寄存器里原来用户态的指令位置，需要先保存起来。接着，为了执行内核态代码</li>
+<li>CPU 寄存器需要更新为内核态指令的新位置。最后才是跳转到内核态运行内核任务</li>
+<li>而系统调用结束后，CPU 寄存器需要恢复原来保存的用户态，然后再切换到用户空间，继续运行进程。所以，一次系统调用的过程，其实是发生了两次 CPU 上下文切换</li>
+</ul>
+</li>
+<li>
+<p>进程间切换</p>
+<ul>
+<li>从一个进程切换到另一个进程运行</li>
+<li>在保存当前进程的内核状态和 CPU 寄存器之前，需要先把该进程的虚拟内存、栈等保存下来；而加载了下一进程的内核态后，还需要刷新进程的虚拟内存和用户栈</li>
+<li>进程的上下文不仅包括了虚拟内存、栈、全局变量等用户空间的资源，还包括了内核堆栈、寄存器等内核空间的状态</li>
+</ul>
+</li>
+<li>
+<p>线程上下文切换</p>
+</li>
+<li>
+<p>前后两个线程属于不同进程</p>
+<ul>
+<li>因为资源不共享，所以切换过程就跟进程上下文切换是一样</li>
+</ul>
+</li>
+<li>
+<p>前后两个线程属于同一个进程</p>
+<ul>
+<li>因为虚拟内存是共享的，所以在切换时，虚拟内存这些资源就保持不动，只需要切换线程的私有数据、寄存器等不共享的数据</li>
+</ul>
+</li>
+<li>
+<p>中断上下文切换</p>
+</li>
+<li>
+<p>中断上下文切换并不涉及到进程的用户态</p>
+<ul>
+<li>即便中断过程打断了一个正处在用户态的进程，也不需要保存和恢复这个进程的虚拟内存、全局变量等用户态资源。中断上下文，其实只包括内核态中断服务程序执行所必需的状态，包括 CPU 寄存器、内核堆栈、硬件中断参数等</li>
+</ul>
+</li>
+<li>上半部<ul>
+<li>用来快速处理中断,主要处理跟硬件紧密相关的或时间敏感的工作</li>
+</ul>
+</li>
+<li>
+<p>下半部</p>
+<ul>
+<li>延迟处理上半部未完成的工作，通常以内核线程的方式运行；通过软中断信号通知</li>
+</ul>
+</li>
+<li>
+<p>查看系统的上下文切换情况</p>
+</li>
+<li>
+<p>通过 vmstat 查看系统总体的上下文切换</p>
+</li>
+<li>
+<p>通过 pidstat 查看进程切换详情</p>
+<ul>
+<li>cswch：自愿上下文切换，是指进程无法获取所需资源，导致的上下文切换</li>
+<li>nvcswch：非自愿上下文切换，则是指进程由于时间片已到等原因，被系统强制调度，进而发生的上下文切换</li>
+</ul>
+</li>
+<li>
+<p>问题分析</p>
+</li>
+<li>
+<p>自愿上下文切换变多了，说明进程都在等待资源，有可能发生了 I/O 等其他问题</p>
+</li>
+<li>非自愿上下文切换变多了，说明进程都在被强制调度，也就是都在争抢 CPU，说明 CPU 的确成了瓶颈</li>
+<li>中断次数变多了，说明 CPU 被中断处理程序占用，还需要通过查看 /proc/interrupts 文件来分析具体的中断类型</li>
+</ul>
+<h2 id="_3">进程调度时机</h2>
+<ul>
+<li>为了保证所有进程可以得到公平调度，CPU 时间被划分为一段段的时间片，这些时间片再被轮流分配给各个进程。这样，当某个进程的时间片耗尽了，就会被系统挂起，切换到其它正在等待 CPU 的进程运行</li>
+<li>进程在系统资源不足（比如内存不足）时，要等到资源满足后才可以运行，这个时候进程也会被挂起，并由系统调度其他进程运行</li>
+<li>当进程通过睡眠函数 sleep 这样的方法将自己主动挂起时，自然也会重新调度</li>
+<li>当有优先级更高的进程运行时，为了保证高优先级进程的运行，当前进程会被挂起，由高优先级进程来运行</li>
+<li>发生硬件中断时，CPU 上的进程会被中断挂起，转而执行内核中的中断服务程序</li>
+</ul>
+<h2 id="cpu_1">CPU 使用率</h2>
+<ul>
+<li>CPU 使用率 = 1 - 空闲时间 / 总 CPU 时间</li>
+<li>平均 CPU 使用率 = (空闲时间 2 - 空闲时间 1) / (总 CPU 时间 2 - 总 CPU 时间 1)</li>
+<li>性能工具一般都会取间隔一段时间（比如 3 秒）的两次值</li>
+<li>常用的性能分析工具</li>
+<li>top/htop 显示了系统总体的 CPU 和内存使用情况，以及各个进程的资源使用情况</li>
+<li>ps 显示了每个进程的资源使用情况</li>
+</ul>
+<h1 id="_4">工具</h1>
+<ul>
+<li>
+<p>stress Linux 系统压力测试工具</p>
+</li>
+<li>
+<p>stress --cpu 1 --timeout 600</p>
+</li>
+<li>stress -i 1 --timeout 600</li>
+<li>
+<p>stress -c 8 --timeout 600</p>
+</li>
+<li>
+<p>sysbench 多线程的基准测试工具</p>
+</li>
+<li>
+<p>sysbench --threads=10 --max-time=300 threads run</p>
+</li>
+<li>
+<p>sysstat 包含了常用的 Linux 性能工具</p>
+</li>
+<li>
+<p>mpstat 是一个常用的多核 CPU 性能分析工具，用来实时查看每个 CPU 的性能指标，以及所有 CPU 的平均指标</p>
+<ul>
+<li>mpstat -P ALL 5 20</li>
+</ul>
+</li>
+<li>
+<p>pidstat 是一个常用的进程性能分析工具，用来实时查看进程的 CPU、内存、I/O 以及上下文切换等性能指标</p>
+<ul>
+<li>pidstat -u 5 1</li>
+<li>pidstat -w 5</li>
+<li>pidstat -wt 1</li>
+</ul>
+</li>
+<li>
+<p>vmstat 一个常用的系统性能分析工具，主要用来分析系统的内存使用情况，也常用来分析 CPU 上下文切换和中断的次数</p>
+</li>
+<li>
+<p>命令：vmstat 5</p>
+</li>
+<li>
+<p>信息解读</p>
+<ul>
+<li>cs（context switch）是每秒上下文切换的次数</li>
+<li>in（interrupt）则是每秒中断的次数</li>
+<li>r（Running or Runnable）是就绪队列的长度，也就是正在运行和等待 CPU 的进程数</li>
+<li>b（Blocked）则是处于不可中断睡眠状态的进程数</li>
+</ul>
+</li>
+<li>
+<p>perf</p>
+</li>
+<li>
+<p>以性能事件采样为基础，不仅可以分析系统的各种事件和内核性能，还可以用来分析指定应用程序的性能问题</p>
+</li>
+<li>
+<p>命令</p>
+<ul>
+<li>perf top</li>
+<li>perf record/report</li>
+</ul>
+</li>
+<li>
+<p>ab</p>
+</li>
+<li>
+<p>apache bench, 常用的 HTTP 服务性能测试工具</p>
+</li>
+<li>
+<p>ab -c 10 -n 100 your_url:port 并发 10 个请求测试 Nginx 性能，总共测试 100 个请求</p>
+</li>
+<li>
+<p>dstat</p>
+</li>
+<li>
+<p>系统资源使用分析，如磁盘</p>
+</li>
+<li>
+<p>strace</p>
+</li>
+<li>
+<p>跟踪进程系统调用</p>
+</li>
+</ul>
+
+              
+
+<!-- Giscus -->
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js" data-repo="lrtz-v/lrtz-v.github.io"
+  data-repo-id="MDEwOlJlcG9zaXRvcnkzMDQyNzQ2MzE=" data-category="General" data-category-id="DIC_kwDOEiLcx84CQDFq"
+  data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom"
+  data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async>
+  </script>
+
+<!-- Synchronize Giscus theme with palette -->
+<script>
+  var giscus = document.querySelector("script[src*=giscus]")
+
+  /* Set palette on initial load */
+  var palette = __md_get("__palette")
+  if (palette && typeof palette.color === "object") {
+    var theme = palette.color.scheme === "slate" ? "dark" : "light"
+    giscus.setAttribute("data-theme", theme)
+  }
+
+  /* Register event handlers after documented loaded */
+  document.addEventListener("DOMContentLoaded", function () {
+    var ref = document.querySelector("[data-md-component=palette]")
+    ref.addEventListener("change", function () {
+      var palette = __md_get("__palette")
+      if (palette && typeof palette.color === "object") {
+        var theme = palette.color.scheme === "slate" ? "dark" : "light"
+
+        /* Instruct Giscus to change theme */
+        var frame = document.querySelector(".giscus-frame")
+        frame.contentWindow.postMessage(
+          { giscus: { setConfig: { theme } } },
+          "https://giscus.app"
+        )
+      }
+    })
+  })
+</script>
 
             </article>
             
@@ -652,6 +1033,42 @@
       </main>
       
         <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../centos_kernal_upgrade/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Centos内核升级" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Centos内核升级
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../Redis/redis/" class="md-footer__link md-footer__link--next" aria-label="Next: 简介" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              简介
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
@@ -673,16 +1090,16 @@
     <div class="md-dialog" data-md-component="dialog">
       <div class="md-dialog__inner md-typeset"></div>
     </div>
-    <script id="__config" type="application/json">{"base": "/", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "content.code.annotate", "content.tabs.link", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky"], "search": "/assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "content.code.annotate", "content.tabs.link", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.b97dbffb.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
     
     
-      <script src="/assets/javascripts/bundle.6c7ad80a.min.js"></script>
+      <script src="../../assets/javascripts/bundle.6c7ad80a.min.js"></script>
       
-        <script src="/javascripts/extra.js"></script>
+        <script src="../../javascripts/extra.js"></script>
       
-        <script src="/javascripts/tablesort.js"></script>
+        <script src="../../javascripts/tablesort.js"></script>
       
-        <script src="/javascripts/mathjax.js"></script>
+        <script src="../../javascripts/mathjax.js"></script>
       
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
       
