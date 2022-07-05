@@ -1,3 +1,64 @@
-site_name: Docs
+site_name: LRTZ
+repo_url: https://github.com/lrtz-v/lrtz-v.github.io
+repo_name: lrtz-v
 theme:
+  icon:
+    tag:
+      html: fontawesome/brands/html5
+      js: fontawesome/brands/js
+      css: fontawesome/brands/css3
+    repo: fontawesome/brands/github
+  font:
+    text: Roboto Mono
+  logo: assets/favicon.ico
+  features:
+    - navigation.top
+    # - navigation.expand
+    - navigation.instant
+    - navigation.tracking
+    # - navigation.tabs
+    # - navigation.tabs.sticky
+    # - navigation.sections
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+
+    # Palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
   name: material
+extra_css:
+  - stylesheets/extra.css
+extra_javascript:
+  - javascripts/extra.js
+plugins:
+  # - privacy
+  - search
+  - tags:
+      tags_file: tags.md
+extra:
+  tags:
+    HTML5: html
+    JavaScript: js
+    CSS: css
+  consent:
+    title: Cookie consent
+    description: >-
+      We use cookies to recognize your repeated visits and preferences, as well
+      as to measure the effectiveness of our documentation and whether users
+      find what they're searching for. With your consent, you're helping us to
+      make our documentation better.
+    cookies:
+      analytics: Custom name
+    actions:
+      - accept
+      - manage
+      - reject

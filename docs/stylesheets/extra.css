@@ -1,0 +1,28 @@
+:root>* {
+  --md-primary-fg-color: #EE0F0F;
+  --md-primary-fg-color--light: #ECB7B7;
+  --md-primary-fg-color--dark: #90030C;
+
+  /* --md-shadow-z1: 0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.05),
+  0 0 #{px2rem(1px)} hsla(0, 0%, 0%, 0.1);
+
+  --md-shadow-z2: 0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.1),
+  0 0 #{px2rem(1px)} hsla(0, 0%, 0%, 0.25);
+
+  --md-shadow-z3: 0 #{px2rem(4px)} #{px2rem(10px)} hsla(0, 0%, 0%, 0.2),
+  0 0 #{px2rem(1px)} hsla(0, 0%, 0%, 0.35); */
+}
+
+[data-md-color-scheme="youtube"] {
+  --md-primary-fg-color:        #EE0F0F;
+  --md-primary-fg-color--light: #ECB7B7;
+  --md-primary-fg-color--dark:  #90030C;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 210;
+}
+
+.md-grid {
+  max-width: 1440px;
+}
