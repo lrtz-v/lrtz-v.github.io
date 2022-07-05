@@ -1,3 +1,3 @@
-# Tags
-
-[标签集]
+---
+template: base.html
+---

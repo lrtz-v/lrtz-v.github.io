@@ -1,5 +1,8 @@
 ---
 template: main.html
+tags:
+  - Redis
+  - HashTable
 ---
 
 # HashTable

@@ -1,5 +1,7 @@
 ---
 template: main.html
+tags:
+  - Git
 ---
 # Git 常用命令
 

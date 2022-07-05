@@ -1,5 +1,7 @@
 ---
 template: main.html
+tags:
+  - Linux
 ---
 # CPU 分析
 

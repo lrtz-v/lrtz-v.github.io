@@ -1,5 +1,7 @@
 ---
 template: main.html
+tags:
+  - Linux
 ---
 # max file descriptors
 

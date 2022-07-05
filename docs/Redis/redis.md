@@ -1,5 +1,7 @@
 ---
 template: main.html
+tags:
+  - Redis
 ---
 # Redis
 
