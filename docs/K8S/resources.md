@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # Kubernetes 工作资源
 
 ## 第一个自定义服务

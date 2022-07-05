@@ -3,8 +3,8 @@ tags:
   - Linux
   - Centos
   - Kernel
+template: main.html
 ---
-
 # Centos 内核升级
 
 ## 系统更新

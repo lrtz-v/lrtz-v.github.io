@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # Git 常用命令
 
 ## 撤销

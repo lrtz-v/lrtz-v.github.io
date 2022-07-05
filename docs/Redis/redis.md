@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # Redis
 
 - [官方 Repo](https://github.com/redis/redis)

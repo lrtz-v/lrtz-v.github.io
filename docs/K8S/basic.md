@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # Kubernetes 基础
 
 ## Kubernetes 组件

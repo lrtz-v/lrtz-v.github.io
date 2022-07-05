@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # CPU 分析
 
 ## 平均负载

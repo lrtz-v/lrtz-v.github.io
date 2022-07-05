@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # max file descriptors
 
 ## /etc/security/limits.conf

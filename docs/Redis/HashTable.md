@@ -1,3 +1,7 @@
+---
+template: main.html
+---
+
 # HashTable
 
 ## 目录

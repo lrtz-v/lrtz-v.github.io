@@ -2,6 +2,7 @@ site_name: LRTZ
 repo_url: https://github.com/lrtz-v/lrtz-v.github.io
 repo_name: lrtz-v
 theme:
+  custom_dir: overrides
   icon:
     tag:
       html: fontawesome/brands/html5
@@ -13,12 +14,10 @@ theme:
   logo: assets/favicon.ico
   features:
     - navigation.top
-    # - navigation.expand
     - navigation.instant
     - navigation.tracking
-    # - navigation.tabs
-    # - navigation.tabs.sticky
-    # - navigation.sections
+    - content.code.annotate
+    - content.tabs.link
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -39,6 +38,10 @@ extra_css:
   - stylesheets/extra.css
 extra_javascript:
   - javascripts/extra.js
+  - javascripts/tablesort.js
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
 plugins:
   # - privacy
   - search
@@ -62,3 +65,22 @@ extra:
       - accept
       - manage
       - reject
+markdown_extensions:
+  - meta
+  - def_list
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: python/name:pymdownx.superfences.fence_code_format
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.arithmatex:
+      generic: true

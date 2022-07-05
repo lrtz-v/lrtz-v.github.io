@@ -1,3 +1,6 @@
+---
+template: main.html
+---
 # Kubernetes 服务、负载均衡与网络
 
 ## Deployment && Service
