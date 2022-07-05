@@ -90,9 +90,8 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  # - Tag: tags.md
   - Develop:
-      - Git操作: Develop/git.md
+      - Git常用操作: develop/git-options.md
   - K8S:
       - 基础: K8S/basic.md
       - 资源类型: K8S/resources.md
@@ -104,3 +103,4 @@ nav:
   - Redis:
       - 简介: Redis/redis.md
       - HashTable: Redis/HashTable.md
+  - Tag: tags.md
