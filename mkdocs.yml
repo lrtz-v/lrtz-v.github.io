@@ -92,6 +92,7 @@ nav:
   - Home: index.md
   - Develop:
       - Git常用操作: develop/git-options.md
+      - 常用工具: develop/tools.md
   - K8S:
       - 基础: K8S/basic.md
       - 资源类型: K8S/resources.md
@@ -99,6 +100,7 @@ nav:
   - Linux:
       - 常用命令: linux/commands.md
       - Centos内核升级: linux/centos_kernal_upgrade.md
+      - Centos磁盘挂载: linux/centos_disk_mount.md
       - Cpu分析: linux/cpu.md
   - Redis:
       - 简介: Redis/redis.md
