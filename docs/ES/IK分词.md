@@ -15,8 +15,92 @@ template: main.html
 ## 词库服务
 
 - 词库服务要求（自定义词库和停顿词库通过 URL 区分即可）
+
   - Head 接口，返回自定义词库大小
   - Get 接口，返回词库内容
+
+- 内存词典 demo
+
+```golang
+type Dict struct {
+	Words []string `json:"words"`
+}
+
+func (dict *Dict) Content() string {
+	return strings.Join(dict.Words, "\n")
+}
+
+func (dict *Dict) Size() int {
+	return len(dict.Words)
+}
+```
+
+- server demo
+
+```golang
+package main
+
+import (
+	"net/http"
+	"strconv"
+
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+)
+
+func main() {
+	e := echo.New()
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// Routes
+	e.HEAD("/custom", custom_head)
+	e.GET("/custom", custom_words)
+
+	e.HEAD("/stop", hstop_head)
+	e.GET("/stop", stop_wrods)
+
+	e.Logger.Fatal(e.Start(":8080"))
+}
+
+func custom_head(c echo.Context) error {
+	custom_dict := Dict{}
+	dict_size := strconv.Itoa(custom_dict.Size())
+	c.Response().Header().Add("Last-Modified", dict_size)
+	c.Response().Header().Add("ETag", dict_size)
+	return c.String(http.StatusOK, "")
+}
+
+func custom_words(c echo.Context) error {
+	custom_dict := Dict{}
+	body := custom_dict.Content()
+	dict_size := strconv.Itoa(custom_dict.Size())
+	buffer := []byte(custom_dict.Content())
+	c.Response().Header().Add("Last-Modified", dict_size)
+	c.Response().Header().Add("ETag", dict_size)
+	c.Response().Header().Add("Content-Length", strconv.Itoa(len(buffer)))
+	return c.String(http.StatusOK, body)
+}
+
+func hstop_head(c echo.Context) error {
+	stop_dict := Dict{}
+	dict_size := strconv.Itoa(stop_dict.Size())
+	c.Response().Header().Add("Last-Modified", dict_size)
+	c.Response().Header().Add("ETag", dict_size)
+	return c.String(http.StatusOK, "")
+}
+
+func stop_wrods(c echo.Context) error {
+	stop_dict := Dict{}
+	body := stop_dict.Content()
+	dict_size := strconv.Itoa(stop_dict.Size())
+	buffer := []byte(stop_dict.Content())
+	c.Response().Header().Add("Last-Modified", dict_size)
+	c.Response().Header().Add("ETag", dict_size)
+	c.Response().Header().Add("Content-Length", strconv.Itoa(len(buffer)))
+	return c.String(http.StatusOK, body)
+}
+```
 
 ## 下载 IK 分词插件，更改词库配置
 
