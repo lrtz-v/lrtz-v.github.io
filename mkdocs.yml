@@ -101,7 +101,7 @@ nav:
       - 常用命令: linux/commands.md
       - Centos内核升级: linux/centos_kernal_upgrade.md
       - Centos磁盘挂载: linux/centos_disk_mount.md
-      - Cpu分析: linux/cpu.md
+      - 性能分析: linux/analysis.md
   - Redis:
       - 简介: Redis/redis.md
       - HashTable: Redis/HashTable.md
