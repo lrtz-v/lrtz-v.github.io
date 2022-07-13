@@ -94,6 +94,7 @@ nav:
       - Git常用操作: develop/git-options.md
       - 常用工具: develop/tools.md
   - K8S:
+      - 安装: K8S/install.md
       - 基础: K8S/basic.md
       - 资源类型: K8S/resources.md
       - 网络及服务: K8S/services.md

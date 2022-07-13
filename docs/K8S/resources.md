@@ -2,6 +2,7 @@
 template: main.html
 tags:
   - K8S
+  - Kubernetes
 ---
 # Kubernetes 工作资源
 

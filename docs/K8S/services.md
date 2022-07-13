@@ -2,6 +2,7 @@
 template: main.html
 tags:
   - K8S
+  - Kubernetes
 ---
 # Kubernetes 服务、负载均衡与网络
 
