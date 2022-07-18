@@ -8,6 +8,8 @@ tags:
 
 # Cilium 安装
 
+- doc: https://docs.cilium.io/en/stable/gettingstarted/http/
+
 ## 启动 Kubernetes 集群，设置 cni 为 cilium
 
 ```bash

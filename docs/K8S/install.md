@@ -7,6 +7,8 @@ tags:
 
 # Kubernetes 安装（On Apple M1）
 
+- doc: https://kubernetes.io/zh-cn/docs/home/
+
 ## minikube 安装
 
 ```bash
