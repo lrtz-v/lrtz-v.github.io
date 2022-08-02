@@ -96,6 +96,7 @@ nav:
   - K8S:
       - 安装: K8S/install.md
       - 资源类型: K8S/resource.md
+      - 服务与负载: K8S/service_&_network.md
   - Linux:
       - 常用命令: linux/commands.md
       - Centos内核升级: linux/centos_kernal_upgrade.md
