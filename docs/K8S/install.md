@@ -49,17 +49,19 @@ zsh ➜ minikube delete
 zsh ➜ minikube delete --all
 ```
 
-## prod deployment（centos 7 & ）
-
+## prod deployment（centos 7 & kubeadm）
 
 ### 系统初始化
 
 - 停止防火墙，Iptables 设置为空
+
 ```bash
 zsh ➜ systemctl  stop firewalld  &&  systemctl  disable firewalld
 zsh ➜ yum -y install iptables-services  &&  systemctl  start iptables  &&  systemctl  enable iptables &&  iptables -F  &&  service iptables save
 ```
+
 - 关闭不必要的服务
+
 ```bash
 zsh ➜ swapoff -a && sed -i '/ swap / s/^\(.*\)$/#\1/g' /etc/fstab
 zsh ➜ setenforce 0 && sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
@@ -89,6 +91,7 @@ zsh ➜ sysctl -p /etc/sysctl.d/kubernetes.conf
 ```
 
 - 时区设置
+
 ```bash
 zsh ➜ timedatectl set-timezone Asia/Shanghai
 zsh ➜ timedatectl set-local-rtc 0
@@ -129,9 +132,8 @@ EOF
 zsh ➜ systemctl restart systemd-journald
 ```
 
-- 内核升级4.44+
+- 内核升级 4.44+
   - https://lrtz-v.github.io/linux/centos_kernal_upgrade/
-
 
 ### 使用 Kubeadm 部署
 
@@ -151,6 +153,7 @@ zsh ➜ chmod 755 /etc/sysconfig/modules/ipvs.modules && bash /etc/sysconfig/mod
 ```
 
 - docker
+
 ```bash
 zsh ➜ yum install -y yum-utils device-mapper-persistent-data lvm2
 zsh ➜ yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
@@ -185,7 +188,7 @@ zsh ➜ yum -y  install  kubeadm-1.22 kubectl-1.22 kubelet-1.22
 zsh ➜ systemctl enable kubelet.service
 ```
 
-- master节点初始化
+- master 节点初始化
 
 ```bash
 zsh ➜ kubeadm config print init-defaults > kubeadm-config.yaml
@@ -215,13 +218,3 @@ zsh ➜ kubeadm join <control-plane-host>:<control-plane-port> --token <token> -
 ```bash
 zsh ➜ kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 ```
-
-
-
-
-
-
-
-
-
-
