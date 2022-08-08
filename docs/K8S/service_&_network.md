@@ -309,3 +309,13 @@ zsh ➜ minikube tunnel
 zsh ➜ curl 127.0.0.1:80
 <h1>Test Homepage</h1>
 ```
+
+## TODO 网络通信
+
+- pod 与 Service
+  - iptables
+  - lvs
+- 统一节点内的 pod 间通信
+  - docker 网桥
+- 不同节点的 pod 通信
+  - flannel
