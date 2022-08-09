@@ -68,6 +68,18 @@ zsh ➜ setenforce 0 && sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/co
 zsh ➜ systemctl stop postfix && systemctl disable postfix
 ```
 
+- 关闭 NUMA
+
+```bash
+zsh ➜ cp /etc/default/grub{,.bak}
+zsh ➜ vim /etc/default/grub # 在 GRUB_CMDLINE_LINUX 一行添加 `numa=off` 参数，如下所示: diff /etc/default/grub.bak /etc/default/grub
+6c6
+< GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rhgb quiet"
+---
+> GRUB_CMDLINE_LINUX="crashkernel=auto rd.lvm.lv=centos/root rhgb quiet numa=off" cp /boot/grub2/grub.cfg{,.bak}
+grub2-mkconfig -o /boot/grub2/grub.cfg
+```
+
 - /etc/sysctl.d/kubernetes.conf
 
 ```conf
