@@ -98,7 +98,7 @@ nav:
       - 资源类型: K8S/resource.md
       - 服务与负载: K8S/service_&_network.md
   - ServerMesh:
-      - 服务注册中心: ServerMesh/server_register.md
+      - 基础知识: ServerMesh/server.md
   - Linux:
       - 常用命令: linux/commands.md
       - Centos内核升级: linux/centos_kernal_upgrade.md
