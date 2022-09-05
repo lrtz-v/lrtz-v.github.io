@@ -5,6 +5,10 @@ tags:
   - 注册中心
   - 负载均衡
   - 服务治理
+  - 网关
+  - 配置中心
+  - Trace
+  - Envoy
 ---
 
 # 服务注册中心
@@ -196,3 +200,212 @@ tags:
 - 主要配置
   - 滑动窗口时间：如 10s
   - 触发条件：如错误码
+
+# 连接池
+
+- HTTP 连接池
+- HTTP/2 连接池
+
+# 网关
+
+## API-Gateway
+
+- 提供统一的流量入口
+- 业务聚合
+- 协议转换，http -> grpc/thrift
+- 中间件策略，限流熔断等
+- 安全认证
+- 证书管理，如 https 证书拆卸、管理等
+
+## 常用网关
+
+- Kong（lua + OpenResty）
+  - Service：后端服务
+  - router：路由
+  - Admin Api：内部管理接口
+  - Plugins：插件
+  - Load Balancing：负载，DNS 和内置负载均衡器
+  -
+- Zuul（Java）
+- Traefik（Go）
+
+## 双重网关（系统网关和业务网关）
+
+- 分别面向运维和开发
+- 业务网关还可以根据业务维度拆分，防止单一网关故障带来全站不可用
+
+# 配置中心
+
+## 配置中心的优势
+
+- 减少发版次数
+- 提升安全性
+
+## 配置中心的特性
+
+- 实时感知配置变更
+  - 实时性要求不高，要求最终一致
+- 变更频率低
+- 安全性要求高，如证书等
+- 变更审计，可追踪
+- 灰度发布
+- 变更回滚
+- 弱依赖
+  - 通过 SDK 增加配置缓存，即便配置中心服务异常，也不影响当前服务使用
+- 图形操作界面
+
+## 配置中心选型
+
+- Etcd
+- Apollo
+- Confd
+
+## 配置中心的实时变更
+
+- 长连接 watch，TPC/gRPC
+- HTTP 长轮询，HTTP KeepAlive
+- 定时同步
+- 长连接 watch + 定时轮训
+
+## Service Mesh 的配置中心
+
+- 服务治理及中配置
+  - 系同层面的配置需要抽象出来，形成同意的数据结构供控制面使用
+- 平台化
+  - 提供 SRE 操作平台
+
+# Trace
+
+## 可观测组件
+
+- 链路追踪
+  - 记录调用链路信息
+- Metrics 监控指标
+  - 记录服务状态
+- 日志分析
+  - 用于排查问题
+
+## Trace 链路追踪原理
+
+- TraceId：全局唯一的调用标识
+- span、parentSpan：表示调用次数
+
+## 常见链路追踪系统
+
+- Zipkin，由 Twitter 开源
+- Jaeger，由 Uber 开源
+
+## Trace 日志落盘
+
+- SDK
+- 采样率
+
+# Metrics
+
+## 常用的 Metrics 系统
+
+- StatsD + Graphite
+- influDB + Telegraf
+- Prometheus
+
+## Prometheus 的 Metrics 类型
+
+- Counter
+  - 累加值，适合统计 QPS 等
+- Gauge
+  - 适合记录瞬时值，如统计熔断、限流事件
+- Histogram
+  - 适合统计 99 延时等信息，适合高性能的场景使用
+- Summary
+  - 类似于 Histogram，性能比 Histogram 弱，但更精准
+
+# Service Mesh 选型
+
+- https://servicemesh.es
+
+| 解决方案 | Istio      | Linkerd2       | SOFAMaesh                      | Kuma           | Consul          | Traefik              |
+| -------- | ---------- | -------------- | ------------------------------ | -------------- | ----------------------- | -------------------- |
+| 服务代理 | Envoy      | linkerd-proxy  | Traefik                        | Envoy          | Envoy                   | Envoy                |
+| 开发语言 | GO、C++    | Go、Rust       | Go                             | Go、C++        | Go、C++                 | C++                  |
+| 平台     | K8S        | K8S            | K8S、VM                        | K8S、VM        | K8S                     | K8S、VM              |
+| 协议支持 | 多种 RPC   | 多种 RPC       | Http/gRPC                      | 多种 RPC       | 多种 RPC                | 多种 RPC             |
+| 负载均衡 | 多种       | P2C            | WRR                            | 多种           | 多种                    | 多种                 |
+| 优点     | 知名、成熟 |                |                                | 多平台支持較好 | 适合在 consul 上扩展    | 云厂商保证服务稳定性 |
+| 缺点     | 版本变化大 | 服务治理不完善 | 节点部署方式，不适合大规模应用 | 冷门           | 不支持限流、绑定 consul | 绑定云服务商         |
+
+# 数据面-Envoy
+
+- 专为大型现代 SOA 架构设计的 L7 代理和通信总线，可以作为数据面、入口网关使用，通过 xDS API 控制 Envoy 的监听、路由、负载均衡等行为
+
+## 核心组件
+
+- Iptable：通过 Iptable 劫持，将入口和出口的流量全转发到 Envoy 上
+- Listener：通过建立多个监听器提供不同的服务，例如，监听两个的端口分别负责 sidercar 模式的出流量和入流量。如过提供不同的协议，Envoy 也会建立不同的端口提供服务
+- Worker：每个 Listener 维护一个对应的 worker pool，Envoy 为每个逻辑处理器创建一个 worker 线程，当我们在一个新的端口启动一个新的 server 时，Envoy 也会创建对应的 worker 线程。太多的 worker 线程不一定是好事，特别的在 sidercar 模式
+- Filters：提供四层、七层的流量过滤，支持服务治理
+- Cluster Manager：流量经过 Router 识别出需要转发的 Cluster，通过 Cluster Manager 进行服务发现和负载均衡
+- Upstream：维护 Endpoint 的连接池，通过负载均衡器将流量转发到合适的 Endpoint 上
+
+## Envoy 作为 sidercar 的使用
+
+- Envoy 作为 Sidercar 使用时，需要和服务部署痛一台机器或者同一个 pod 中，当用户访问其他服务时，流量会自动被劫持到 Envoy 中
+- 流程
+  - 通过 Iptable 对流量进行劫持，将流量转发到出流量端口
+  - Envoy 先根据 virtual hosts 匹配，再通过路由匹配，发现路由对应的 Cluster，通过服务发现找到 Cluster 对应的 Endpoint，将流量转发到目标 pod
+  - Pod 内，通过 Iptable 对入流量劫持，将流量劫持到 Envoy 的入端口
+  - Envoy 将本地流量转发到对应的 pod 内本地地址
+
+## Envoy 配置
+
+- 静态配置
+  - 手动填写
+- 动态配置
+  - 通过 xDS API 获取配置
+
+## Envoy 边缘代理网关
+
+- 边缘代理网关：负责网格出口与入口流量负载均衡的特殊数据面，它不以 Sidecar 的形式，而是以独立 Pod 的形式部署在您的集群内
+
+- 特殊设置
+  - HTTP 头清理
+    - 如 x-forward-for
+  - 超时控制
+    - 连接超时：Envoy 为 HTTP 服务提供空闲连接超时时间的设置，默认一小时
+    - 流超时：流时 HTTP/2 中的概念，Envoy 通过将 HTTP 连接对应到流模式，统一进行处理
+    - 路由超时：为某些请求设置特殊的配置
+  - 连接限制
+    - Envoy 可以针对全局或者监听器设置连接限制，可以根据服务峰值设置合理的连接限制
+
+# xDS-控制面与数据面的通信
+
+- xDS API：一套可扩展的通用微服务控制 API，这些 API 可以做到服务发现、路由、集群发现等功能。xDS 中每种类型对应一个发现的资源，这些类型数据存储在 xDS 协议的 Discovery Request 和 Discovery Response 的 TypeUrl 字段中，格式为：type.googleapis.com/**\<resource type>**
+- 资源类型
+  - LDS：监听器发现服务，对应 Listener 数据类型
+  - CDS：集群发现服务，对应 Cluster 数据类型
+  - RDS：路由发现服务，对应 Route 数据类型
+  - EDS：节点发现服务，包含服务名、节点信息、LB 策略等
+  - SDS：密钥发现服务，用于证书发现
+
+## todo：gRPC 流式订阅
+
+# Engress & Ingress
+
+## Ingress
+
+- K8S 集群外访问 pod，需要通过 NodePort 和 Ingress
+  - NodePort：通过暴露 node 端口，提供访问 K8S Service 的入口
+  - Ingress：通过 ingress 路由，将请求转发到 K8S Service 上，内部依然是使用的 ClusterIP，需要通过 IPVS 四层转发
+
+## Istio Gateway
+
+- 允许外部流量访问内部服务，代替 Ingress；Gateway 只需要配置流量转发即可
+
+## Egress 出口网关
+
+### K8S Engress
+
+- 通过 IP 地址或端口层面（OSI 第 3 层或第 4 层）控制网络流量
+
+### Istio Egress
+
+- Istio Egress 本质上是一个 Envoy Proxy，通过 Envoy 的七层负载，提供路由策略
