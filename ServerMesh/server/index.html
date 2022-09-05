@@ -1,0 +1,1814 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.2">
+    
+    
+      
+        <title>基础知识 - LRTZ</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.69437709.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+      
+      
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto Mono";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="">
+  
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&"object"==typeof palette.color)for(var key of Object.keys(palette.color))document.body.setAttribute("data-md-color-"+key,palette.color[key])</script>
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#_1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="LRTZ" class="md-header__button md-logo" aria-label="LRTZ" data-md-component="logo">
+      
+  <img src="../../assets/favicon.ico" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            LRTZ
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              基础知识
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      <form class="md-header__option" data-md-component="palette">
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent=""  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+          
+            <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+          
+          
+          <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent=""  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_2">
+          
+            <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+            </label>
+          
+        
+      </form>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/lrtz-v/lrtz-v.github.io" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lrtz-v
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../develop/git-options/" class="md-tabs__link">
+        Develop
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../K8S/install/" class="md-tabs__link">
+        K8S
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="./" class="md-tabs__link md-tabs__link--active">
+        ServerMesh
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../linux/commands/" class="md-tabs__link">
+        Linux
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../Redis/redis/" class="md-tabs__link">
+        Redis
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../ES/IK%E5%88%86%E8%AF%8D/" class="md-tabs__link">
+        ES
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../Golang/goquery/" class="md-tabs__link">
+        Golang
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../../tags/" class="md-tabs__link">
+      Tag
+    </a>
+  </li>
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="LRTZ" class="md-nav__button md-logo" aria-label="LRTZ" data-md-component="logo">
+      
+  <img src="../../assets/favicon.ico" alt="logo">
+
+    </a>
+    LRTZ
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/lrtz-v/lrtz-v.github.io" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.1.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    lrtz-v
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" >
+      
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Develop
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Develop" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Develop
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../develop/git-options/" class="md-nav__link">
+        Git常用操作
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../develop/tools/" class="md-nav__link">
+        常用工具
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_3" type="checkbox" id="__nav_3" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_3">
+          K8S
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="K8S" data-md-level="1">
+        <label class="md-nav__title" for="__nav_3">
+          <span class="md-nav__icon md-icon"></span>
+          K8S
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../K8S/install/" class="md-nav__link">
+        安装
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../K8S/resource/" class="md-nav__link">
+        资源类型
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../K8S/service_%26_network/" class="md-nav__link">
+        服务与负载
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_4" type="checkbox" id="__nav_4" checked>
+      
+      
+      
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_4">
+          ServerMesh
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="ServerMesh" data-md-level="1">
+        <label class="md-nav__title" for="__nav_4">
+          <span class="md-nav__icon md-icon"></span>
+          ServerMesh
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          基础知识
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        基础知识
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    健康检查设计
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    注册中心的选型
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    搭建高可用的注册中心
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-mesh" class="md-nav__link">
+    Service Mesh 中的注册中心
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-mesh_1" class="md-nav__link">
+    Service Mesh 中的注册中心的优势
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_5" type="checkbox" id="__nav_5" >
+      
+      
+      
+        
+          
+        
+          
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_5">
+          Linux
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Linux" data-md-level="1">
+        <label class="md-nav__title" for="__nav_5">
+          <span class="md-nav__icon md-icon"></span>
+          Linux
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/commands/" class="md-nav__link">
+        常用命令
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/centos_kernal_upgrade/" class="md-nav__link">
+        Centos内核升级
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/centos_disk_mount/" class="md-nav__link">
+        Centos磁盘挂载
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../linux/analysis/" class="md-nav__link">
+        性能分析
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_6" type="checkbox" id="__nav_6" >
+      
+      
+      
+        
+          
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_6">
+          Redis
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Redis" data-md-level="1">
+        <label class="md-nav__title" for="__nav_6">
+          <span class="md-nav__icon md-icon"></span>
+          Redis
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Redis/redis/" class="md-nav__link">
+        简介
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Redis/HashTable/" class="md-nav__link">
+        HashTable
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_7" type="checkbox" id="__nav_7" >
+      
+      
+      
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_7">
+          ES
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="ES" data-md-level="1">
+        <label class="md-nav__title" for="__nav_7">
+          <span class="md-nav__icon md-icon"></span>
+          ES
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ES/IK%E5%88%86%E8%AF%8D/" class="md-nav__link">
+        IK分词热更新
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_8" type="checkbox" id="__nav_8" >
+      
+      
+      
+        
+          
+        
+      
+      
+        <label class="md-nav__link" for="__nav_8">
+          Golang
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Golang" data-md-level="1">
+        <label class="md-nav__title" for="__nav_8">
+          <span class="md-nav__icon md-icon"></span>
+          Golang
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Golang/goquery/" class="md-nav__link">
+        Goquery实用姿势
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tags/" class="md-nav__link">
+        Tag
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    健康检查设计
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    注册中心的选型
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    搭建高可用的注册中心
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-mesh" class="md-nav__link">
+    Service Mesh 中的注册中心
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-mesh_1" class="md-nav__link">
+    Service Mesh 中的注册中心的优势
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          <div class="md-content" data-md-component="content">
+            <article class="md-content__inner md-typeset">
+              
+
+                
+  <a href="https://github.com/lrtz-v/lrtz-v.github.io/edit/master/docs/ServerMesh/server.md" title="Edit this page" class="md-content__button md-icon">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+  
+
+  <nav class="md-tags" >
+    
+      
+        <a href="../../tags/#service-mesh" class="md-tag">
+          Service Mesh
+        </a>
+      
+    
+      
+        <a href="../../tags/#" class="md-tag">
+          注册中心
+        </a>
+      
+    
+      
+        <a href="../../tags/#" class="md-tag">
+          负载均衡
+        </a>
+      
+    
+      
+        <a href="../../tags/#" class="md-tag">
+          服务治理
+        </a>
+      
+    
+      
+        <a href="../../tags/#" class="md-tag">
+          网关
+        </a>
+      
+    
+      
+        <a href="../../tags/#" class="md-tag">
+          配置中心
+        </a>
+      
+    
+      
+        <a href="../../tags/#trace" class="md-tag">
+          Trace
+        </a>
+      
+    
+      
+        <a href="../../tags/#envoy" class="md-tag">
+          Envoy
+        </a>
+      
+    
+  </nav>
+
+
+
+<h1 id="_1">服务注册中心</h1>
+<h2 id="_2">健康检查设计</h2>
+<ul>
+<li>服务主动探活</li>
+<li>服务定时发送租约信息给注册中心</li>
+<li>写操作压力大、主动租约不能保证服务健康</li>
+<li>注册中心发起健康检查</li>
+<li>可能会发生旧服务重新激活的问题</li>
+<li>可用 envory 做服务名检查</li>
+<li>调用房的负载均衡器进行健康检查</li>
+<li>如 grpc 的自动摘除节点</li>
+<li>IP 重用产生脏数据</li>
+</ul>
+<h2 id="_3">注册中心的选型</h2>
+<table>
+<thead>
+<tr>
+<th>特征</th>
+<th>Nacos</th>
+<th>Eureka</th>
+<th>Zookeeper</th>
+<th>Consul</th>
+<th>Etcd</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一致性协议</td>
+<td>AP</td>
+<td>AP</td>
+<td>CP</td>
+<td>CP</td>
+<td>CP</td>
+</tr>
+<tr>
+<td>健康检查</td>
+<td>多种</td>
+<td>TTL</td>
+<td>Keep Alive</td>
+<td>多种</td>
+<td>TTL</td>
+</tr>
+<tr>
+<td>网络异常保护</td>
+<td>支持</td>
+<td>支持</td>
+<td>不支持</td>
+<td>支持</td>
+<td>不支持</td>
+</tr>
+<tr>
+<td>实现语言</td>
+<td>Java</td>
+<td>Java</td>
+<td>Java</td>
+<td>Go</td>
+<td>Go</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">搭建高可用的注册中心</h2>
+<ul>
+<li>Q1：注册中心故障了，服务是否还能正常访问？</li>
+<li>只要服务缓存了服务数据，影响面可控</li>
+<li>服务无法扩容</li>
+<li>Q2：注册中心因为高负载，推送了异常的数据，服务是否还能正常访问？</li>
+<li>在客户端的服务发现 SDk 中加入自我保护机制，当服务的节点数量下降超过一定阈值，就进入保护机制，放弃使用新推送过来的服务注册信息</li>
+<li>Q3：新加入的机器，出现了网络联通性问题（注册中心与服务网络正常，服务之间网络异常），应该怎样应对？</li>
+<li>在负载均衡中加入被动健康检查（节点熔断）和主动健康检查，主动剔除失效的节点</li>
+<li>
+<p>Q4：服务是否应该完全信任注册中心推送的数据？</p>
+</li>
+<li>
+<p>相比注册中心数据，更信任本地数据</p>
+</li>
+<li>
+<p>使用 Envoy 2X2 矩阵来决定节点是否应该路由</p>
+<table>
+<thead>
+<tr>
+<th>发现状态</th>
+<th>健康检查成功</th>
+<th>健康检查失败</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>发现</td>
+<td>路由</td>
+<td>不路由</td>
+</tr>
+<tr>
+<td>未发现</td>
+<td>路由</td>
+<td>不路由，删除</td>
+</tr>
+</tbody>
+</table>
+</li>
+<li>
+<p>Q5：服务发布后，造成 N*M 次事件通知，形成广播风暴，该如何解决？</p>
+</li>
+<li>将消息推送合并</li>
+</ul>
+<h2 id="service-mesh">Service Mesh 中的注册中心</h2>
+<ul>
+<li>涉及跨集群访问</li>
+<li>EDS 服务发现规范</li>
+<li>与 K8S 集群结合</li>
+<li>需要注意节点 IP 变化的问题</li>
+</ul>
+<h2 id="service-mesh_1">Service Mesh 中的注册中心的优势</h2>
+<ul>
+<li>由 sidercar 代理注册，减少服务开发量，可以控制注册 meta 信息一致化</li>
+<li>通过控制面聚合多种、多个注册中心数据，降低单一注册中心的读写压力，更容易水平扩展</li>
+<li>通过 sidercar 提供服务正确性检查功能，通过 header 中增加服务名与本地服务名称做校验</li>
+</ul>
+<h1 id="_5">负载均衡</h1>
+<h2 id="_6">应该选择什么样的负载均衡器</h2>
+<ul>
+<li>
+<p>硬件负载均衡器</p>
+</li>
+<li>
+<p>F5</p>
+</li>
+<li>Citrix NetScaler</li>
+<li>radware</li>
+<li>
+<p>Array</p>
+</li>
+<li>
+<p>DNS 负载均衡</p>
+</li>
+<li>
+<p>软件负载均衡</p>
+</li>
+<li>
+<p>Nginx（七层）</p>
+</li>
+<li>HAProxy（七层）</li>
+<li>
+<p>LVS（四层）</p>
+</li>
+<li>
+<p>程序内负载均衡：讲负载均衡放在服务程序内部</p>
+</li>
+<li>Service Mesh 负载均衡：利用 sidercar 做负载均衡，属于软件负载均衡的一种</li>
+</ul>
+<h2 id="_7">负载算法</h2>
+<ul>
+<li>Round Robin：轮训算法，适合节点权重一致的场景</li>
+<li>Weighted Round Robin：将权重大的节点分散开，取最大公约数，做简单轮训；在服务重启时会出现请求集中的现象</li>
+<li>Weighted Random：通过随机的方式进行负载，配合二分查找，将时间复杂度降低到 logn，对后端节点非常均衡</li>
+<li>Two Random Choices：通过两次随机算法，选取两个节点，再对比两个节点的负载、延时等信息，选取最优的一个</li>
+<li>Stick Session：同一个客户端，负载到的节点相同，负载不均衡，慎用</li>
+</ul>
+<h2 id="_8">服务发现后如何实现节点保护</h2>
+<ul>
+<li>主动健康检查</li>
+<li>在负载均衡中主动健康检查。</li>
+<li>会产生大量无用 ping；建议选择获取过少节点时才触发，如当前节点数比十五分钟前的少 20%时触发</li>
+<li>恐慌阈值</li>
+<li>当健康检查后，可用的节点依然小于阈值（10%），则忽略健康检查的结果，把流量负载到所有节点，包括异常的节点，保证理由的均衡，健康的节点也不会因为激增的流量而雪崩</li>
+<li>被动健康检查</li>
+<li>通过正常的流量判断节点是否正常，也就是利用节点熔断器</li>
+<li>将 499 及以上的错误码认为是后端服务异常，统计 10 秒滑动窗口内异常请求占比</li>
+</ul>
+<h2 id="_9">节点染色</h2>
+<ul>
+<li>利用节点上的标签进行流量路由；把某一类节点打上相同标签，负载均衡器根据相同标签分发流量</li>
+<li>金丝雀发布、A/B 测试、故障演练、流量分区等</li>
+<li>如何操作</li>
+<li>在网关层，根据 header 信息或者权重对流量进行染色</li>
+<li>在注册中心中也要写入对应的 metaData 信息，用户在负载均衡层进行流量过滤</li>
+</ul>
+<h2 id="_10">地域优先访问</h2>
+<ul>
+<li>在 Envoy 中被称为 zone 感知路由</li>
+<li>名词解释</li>
+<li>始发集群：调用方，Client 的服务节点集群</li>
+<li>上游集群：被调用方，Server 服务节点集群</li>
+<li>zone：区域（Region）和可用区（Availability Zone）</li>
+<li>zone 感知路由，会根据始发集群的所在区节点数量和目标集群的所在区节点数量，动态计算一个相对的比例；通过动态计算上下游的节点数，将流量正确的路由到各个分区，避免上游集群承受过大的访问量而崩溃</li>
+<li>始发集群的本地 zone 节点数量小于或等于上游服务节点数量，直接全量负载到上游集群 zone，并计算剩余流量比例用于服务其它 zone</li>
+<li>始发集群的本地 zone 节点数量大于上游服务节点数量，需要将剩余流量路由到其它上游服务 zone</li>
+<li>节点缩量变化，可能会导致瞬间的流量不均衡</li>
+<li>P2C（pick off to chioce）</li>
+</ul>
+<h2 id="ewma">延时、负载加权（EWMA）</h2>
+<ul>
+<li>基于 P2C 算法的负载均衡，如 Envoy、Nginx、Linkerd</li>
+<li>负载率: client_success/server_cpu*math.Sqrt(latency+1)*(inflight+1)</li>
+<li>client_success：客户端请求成功率</li>
+<li>server_cpu：每次请求 response 的 header 携带的瞬时 cpu</li>
+<li>latency：客户端计算的延时</li>
+<li>inflight：正在发送中的请求数量</li>
+<li>EWMA 计算延时和客户端成功率</li>
+</ul>
+<h2 id="_11">负载均衡中的常见问题</h2>
+<ul>
+<li>Q1：为什么四层负载均衡流量不均匀？</li>
+<li>四层负载均衡是基于连接做负载均衡，由于连接保持，流量会始终打到固定节点；新加入的节点，往往需要较长时间才有流量</li>
+<li>Q2：负载流量一致，后端服务的负载就一致吗？</li>
+<li>因为服务器硬件差异，后端服务的负载很难一致</li>
+<li>Q3：节点下线后，如何及时摘除节点？</li>
+<li>注册中心异步推送存在延迟，可通过 upsteam 节点，返回健康检查信息检查失败的头信息，快速摘掉节点</li>
+</ul>
+<h1 id="_12">使用路由器模块（软路由）针对不同流量实现不同的路由策略</h1>
+<h2 id="_13">名词解释</h2>
+<ul>
+<li>Name：主要对应 Listener 的名称，用端口座位名字，可以保证唯一性</li>
+<li>Domains：在 Envoy 中会先做一次初步的过滤，这层过滤就是服务域名。主要通过字符串匹配</li>
+<li>routes：服务路由配置，针对要访问的服务设置多条路由配置</li>
+<li>match：路由匹配，匹配此字段到对应的路由设置，可以设置如 path、pathPrefix、header 等</li>
+<li>route：基本规则设置，如 Cluster 字段代表路由对应的服务名</li>
+<li>per_filter_config：路由对应的中间件配置，用于服务治理、限流、熔断等</li>
+</ul>
+<h2 id="_14">路由中间件</h2>
+<ul>
+<li>把中间件放在路由层</li>
+</ul>
+<h2 id="_15">服务重写</h2>
+<ul>
+<li>sidercar 的设计模式，保证基础设施和业务独立演化</li>
+</ul>
+<h2 id="rds">RDS 服务发现服务</h2>
+<ul>
+<li>动态发现路由变化，及时更新路由策略</li>
+</ul>
+<h1 id="_16">服务治理</h1>
+<h2 id="_17">限流算法</h2>
+<ul>
+<li>计数器：记录一定时间内的请求量</li>
+<li>在临界区见容易触发错误的判定</li>
+<li>滑动窗口</li>
+<li>漏桶</li>
+<li>在一定时间内，允许通过恒定数量的请求，常用于请求第三方</li>
+<li>令牌</li>
+<li>漏桶的优化版，允许一定时间内的突发流量，适合微服务</li>
+</ul>
+<h2 id="_18">单机限流与全局限流</h2>
+<ul>
+<li>全局限流</li>
+<li>一组服务，通过外部存储对集群整体流量做限流，适合有 DB 有吞吐量限制的场景，扩容不方便</li>
+<li>单机限流</li>
+<li>通过对单机的限流，达到对集群的限流</li>
+</ul>
+<h2 id="_19">熔断</h2>
+<ul>
+<li>状态</li>
+<li>close：初始为关闭状态</li>
+<li>open：熔断中</li>
+<li>halfopen：经过一段可配时间，从 open 变为 halfopen，按照线性方式放行流量，</li>
+<li>主要配置</li>
+<li>滑动窗口时间：如 10s</li>
+<li>触发条件：如错误码</li>
+</ul>
+<h1 id="_20">连接池</h1>
+<ul>
+<li>HTTP 连接池</li>
+<li>HTTP/2 连接池</li>
+</ul>
+<h1 id="_21">网关</h1>
+<h2 id="api-gateway">API-Gateway</h2>
+<ul>
+<li>提供统一的流量入口</li>
+<li>业务聚合</li>
+<li>协议转换，http -&gt; grpc/thrift</li>
+<li>中间件策略，限流熔断等</li>
+<li>安全认证</li>
+<li>证书管理，如 https 证书拆卸、管理等</li>
+</ul>
+<h2 id="_22">常用网关</h2>
+<ul>
+<li>Kong（lua + OpenResty）</li>
+<li>Service：后端服务</li>
+<li>router：路由</li>
+<li>Admin Api：内部管理接口</li>
+<li>Plugins：插件</li>
+<li>Load Balancing：负载，DNS 和内置负载均衡器
+  -</li>
+<li>Zuul（Java）</li>
+<li>Traefik（Go）</li>
+</ul>
+<h2 id="_23">双重网关（系统网关和业务网关）</h2>
+<ul>
+<li>分别面向运维和开发</li>
+<li>业务网关还可以根据业务维度拆分，防止单一网关故障带来全站不可用</li>
+</ul>
+<h1 id="_24">配置中心</h1>
+<h2 id="_25">配置中心的优势</h2>
+<ul>
+<li>减少发版次数</li>
+<li>提升安全性</li>
+</ul>
+<h2 id="_26">配置中心的特性</h2>
+<ul>
+<li>实时感知配置变更</li>
+<li>实时性要求不高，要求最终一致</li>
+<li>变更频率低</li>
+<li>安全性要求高，如证书等</li>
+<li>变更审计，可追踪</li>
+<li>灰度发布</li>
+<li>变更回滚</li>
+<li>弱依赖</li>
+<li>通过 SDK 增加配置缓存，即便配置中心服务异常，也不影响当前服务使用</li>
+<li>图形操作界面</li>
+</ul>
+<h2 id="_27">配置中心选型</h2>
+<ul>
+<li>Etcd</li>
+<li>Apollo</li>
+<li>Confd</li>
+</ul>
+<h2 id="_28">配置中心的实时变更</h2>
+<ul>
+<li>长连接 watch，TPC/gRPC</li>
+<li>HTTP 长轮询，HTTP KeepAlive</li>
+<li>定时同步</li>
+<li>长连接 watch + 定时轮训</li>
+</ul>
+<h2 id="service-mesh_2">Service Mesh 的配置中心</h2>
+<ul>
+<li>服务治理及中配置</li>
+<li>系同层面的配置需要抽象出来，形成同意的数据结构供控制面使用</li>
+<li>平台化</li>
+<li>提供 SRE 操作平台</li>
+</ul>
+<h1 id="trace">Trace</h1>
+<h2 id="_29">可观测组件</h2>
+<ul>
+<li>链路追踪</li>
+<li>记录调用链路信息</li>
+<li>Metrics 监控指标</li>
+<li>记录服务状态</li>
+<li>日志分析</li>
+<li>用于排查问题</li>
+</ul>
+<h2 id="trace_1">Trace 链路追踪原理</h2>
+<ul>
+<li>TraceId：全局唯一的调用标识</li>
+<li>span、parentSpan：表示调用次数</li>
+</ul>
+<h2 id="_30">常见链路追踪系统</h2>
+<ul>
+<li>Zipkin，由 Twitter 开源</li>
+<li>Jaeger，由 Uber 开源</li>
+</ul>
+<h2 id="trace_2">Trace 日志落盘</h2>
+<ul>
+<li>SDK</li>
+<li>采样率</li>
+</ul>
+<h1 id="metrics">Metrics</h1>
+<h2 id="metrics_1">常用的 Metrics 系统</h2>
+<ul>
+<li>StatsD + Graphite</li>
+<li>influDB + Telegraf</li>
+<li>Prometheus</li>
+</ul>
+<h2 id="prometheus-metrics">Prometheus 的 Metrics 类型</h2>
+<ul>
+<li>Counter</li>
+<li>累加值，适合统计 QPS 等</li>
+<li>Gauge</li>
+<li>适合记录瞬时值，如统计熔断、限流事件</li>
+<li>Histogram</li>
+<li>适合统计 99 延时等信息，适合高性能的场景使用</li>
+<li>Summary</li>
+<li>类似于 Histogram，性能比 Histogram 弱，但更精准</li>
+</ul>
+<h1 id="service-mesh_3">Service Mesh 选型</h1>
+<ul>
+<li>https://servicemesh.es</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>解决方案</th>
+<th>Istio</th>
+<th>Linkerd2</th>
+<th>SOFAMaesh</th>
+<th>Kuma</th>
+<th>Consul</th>
+<th>Traefik</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>服务代理</td>
+<td>Envoy</td>
+<td>linkerd-proxy</td>
+<td>Traefik</td>
+<td>Envoy</td>
+<td>Envoy</td>
+<td>Envoy</td>
+</tr>
+<tr>
+<td>开发语言</td>
+<td>GO、C++</td>
+<td>Go、Rust</td>
+<td>Go</td>
+<td>Go、C++</td>
+<td>Go、C++</td>
+<td>C++</td>
+</tr>
+<tr>
+<td>平台</td>
+<td>K8S</td>
+<td>K8S</td>
+<td>K8S、VM</td>
+<td>K8S、VM</td>
+<td>K8S</td>
+<td>K8S、VM</td>
+</tr>
+<tr>
+<td>协议支持</td>
+<td>多种 RPC</td>
+<td>多种 RPC</td>
+<td>Http/gRPC</td>
+<td>多种 RPC</td>
+<td>多种 RPC</td>
+<td>多种 RPC</td>
+</tr>
+<tr>
+<td>负载均衡</td>
+<td>多种</td>
+<td>P2C</td>
+<td>WRR</td>
+<td>多种</td>
+<td>多种</td>
+<td>多种</td>
+</tr>
+<tr>
+<td>优点</td>
+<td>知名、成熟</td>
+<td></td>
+<td></td>
+<td>多平台支持較好</td>
+<td>适合在 consul 上扩展</td>
+<td>云厂商保证服务稳定性</td>
+</tr>
+<tr>
+<td>缺点</td>
+<td>版本变化大</td>
+<td>服务治理不完善</td>
+<td>节点部署方式，不适合大规模应用</td>
+<td>冷门</td>
+<td>不支持限流、绑定 consul</td>
+<td>绑定云服务商</td>
+</tr>
+</tbody>
+</table>
+<h1 id="-envoy">数据面-Envoy</h1>
+<ul>
+<li>专为大型现代 SOA 架构设计的 L7 代理和通信总线，可以作为数据面、入口网关使用，通过 xDS API 控制 Envoy 的监听、路由、负载均衡等行为</li>
+</ul>
+<h2 id="_31">核心组件</h2>
+<ul>
+<li>Iptable：通过 Iptable 劫持，将入口和出口的流量全转发到 Envoy 上</li>
+<li>Listener：通过建立多个监听器提供不同的服务，例如，监听两个的端口分别负责 sidercar 模式的出流量和入流量。如过提供不同的协议，Envoy 也会建立不同的端口提供服务</li>
+<li>Worker：每个 Listener 维护一个对应的 worker pool，Envoy 为每个逻辑处理器创建一个 worker 线程，当我们在一个新的端口启动一个新的 server 时，Envoy 也会创建对应的 worker 线程。太多的 worker 线程不一定是好事，特别的在 sidercar 模式</li>
+<li>Filters：提供四层、七层的流量过滤，支持服务治理</li>
+<li>Cluster Manager：流量经过 Router 识别出需要转发的 Cluster，通过 Cluster Manager 进行服务发现和负载均衡</li>
+<li>Upstream：维护 Endpoint 的连接池，通过负载均衡器将流量转发到合适的 Endpoint 上</li>
+</ul>
+<h2 id="envoy-sidercar">Envoy 作为 sidercar 的使用</h2>
+<ul>
+<li>Envoy 作为 Sidercar 使用时，需要和服务部署痛一台机器或者同一个 pod 中，当用户访问其他服务时，流量会自动被劫持到 Envoy 中</li>
+<li>流程</li>
+<li>通过 Iptable 对流量进行劫持，将流量转发到出流量端口</li>
+<li>Envoy 先根据 virtual hosts 匹配，再通过路由匹配，发现路由对应的 Cluster，通过服务发现找到 Cluster 对应的 Endpoint，将流量转发到目标 pod</li>
+<li>Pod 内，通过 Iptable 对入流量劫持，将流量劫持到 Envoy 的入端口</li>
+<li>Envoy 将本地流量转发到对应的 pod 内本地地址</li>
+</ul>
+<h2 id="envoy">Envoy 配置</h2>
+<ul>
+<li>静态配置</li>
+<li>手动填写</li>
+<li>动态配置</li>
+<li>通过 xDS API 获取配置</li>
+</ul>
+<h2 id="envoy_1">Envoy 边缘代理网关</h2>
+<ul>
+<li>
+<p>边缘代理网关：负责网格出口与入口流量负载均衡的特殊数据面，它不以 Sidecar 的形式，而是以独立 Pod 的形式部署在您的集群内</p>
+</li>
+<li>
+<p>特殊设置</p>
+</li>
+<li>HTTP 头清理<ul>
+<li>如 x-forward-for</li>
+</ul>
+</li>
+<li>超时控制<ul>
+<li>连接超时：Envoy 为 HTTP 服务提供空闲连接超时时间的设置，默认一小时</li>
+<li>流超时：流时 HTTP/2 中的概念，Envoy 通过将 HTTP 连接对应到流模式，统一进行处理</li>
+<li>路由超时：为某些请求设置特殊的配置</li>
+</ul>
+</li>
+<li>连接限制<ul>
+<li>Envoy 可以针对全局或者监听器设置连接限制，可以根据服务峰值设置合理的连接限制</li>
+</ul>
+</li>
+</ul>
+<h1 id="xds-">xDS-控制面与数据面的通信</h1>
+<ul>
+<li>xDS API：一套可扩展的通用微服务控制 API，这些 API 可以做到服务发现、路由、集群发现等功能。xDS 中每种类型对应一个发现的资源，这些类型数据存储在 xDS 协议的 Discovery Request 和 Discovery Response 的 TypeUrl 字段中，格式为：type.googleapis.com/<strong>\<resource type></strong></li>
+<li>资源类型</li>
+<li>LDS：监听器发现服务，对应 Listener 数据类型</li>
+<li>CDS：集群发现服务，对应 Cluster 数据类型</li>
+<li>RDS：路由发现服务，对应 Route 数据类型</li>
+<li>EDS：节点发现服务，包含服务名、节点信息、LB 策略等</li>
+<li>SDS：密钥发现服务，用于证书发现</li>
+</ul>
+<h2 id="todogrpc">todo：gRPC 流式订阅</h2>
+<h1 id="engress-ingress">Engress &amp; Ingress</h1>
+<h2 id="ingress">Ingress</h2>
+<ul>
+<li>K8S 集群外访问 pod，需要通过 NodePort 和 Ingress</li>
+<li>NodePort：通过暴露 node 端口，提供访问 K8S Service 的入口</li>
+<li>Ingress：通过 ingress 路由，将请求转发到 K8S Service 上，内部依然是使用的 ClusterIP，需要通过 IPVS 四层转发</li>
+</ul>
+<h2 id="istio-gateway">Istio Gateway</h2>
+<ul>
+<li>允许外部流量访问内部服务，代替 Ingress；Gateway 只需要配置流量转发即可</li>
+</ul>
+<h2 id="egress">Egress 出口网关</h2>
+<h3 id="k8s-engress">K8S Engress</h3>
+<ul>
+<li>通过 IP 地址或端口层面（OSI 第 3 层或第 4 层）控制网络流量</li>
+</ul>
+<h3 id="istio-egress">Istio Egress</h3>
+<ul>
+<li>Istio Egress 本质上是一个 Envoy Proxy，通过 Envoy 的七层负载，提供路由策略</li>
+</ul>
+
+
+
+
+              
+
+<!-- Giscus -->
+<h2 id="__comments">Comments</h2>
+
+<script src="https://giscus.app/client.js" data-repo="lrtz-v/lrtz-v.github.io"
+  data-repo-id="MDEwOlJlcG9zaXRvcnkzMDQyNzQ2MzE=" data-category="General" data-category-id="DIC_kwDOEiLcx84CQDFq"
+  data-mapping="pathname" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom"
+  data-theme="dark" data-lang="zh-CN" crossorigin="anonymous" async>
+  </script>
+
+<!-- Synchronize Giscus theme with palette -->
+<script>
+  var giscus = document.querySelector("script[src*=giscus]")
+
+  /* Set palette on initial load */
+  var palette = __md_get("__palette")
+  if (palette && typeof palette.color === "object") {
+    var theme = palette.color.scheme === "slate" ? "dark" : "light"
+    giscus.setAttribute("data-theme", theme)
+  }
+
+  /* Register event handlers after documented loaded */
+  document.addEventListener("DOMContentLoaded", function () {
+    var ref = document.querySelector("[data-md-component=palette]")
+    ref.addEventListener("change", function () {
+      var palette = __md_get("__palette")
+      if (palette && typeof palette.color === "object") {
+        var theme = palette.color.scheme === "slate" ? "dark" : "light"
+
+        /* Instruct Giscus to change theme */
+        var frame = document.querySelector(".giscus-frame")
+        frame.contentWindow.postMessage(
+          { giscus: { setConfig: { theme } } },
+          "https://giscus.app"
+        )
+      }
+    })
+  })
+</script>
+
+            </article>
+            
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var tab,labels=set.querySelector(".tabbed-labels");for(tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+          </div>
+        </div>
+        
+          <a href="#" class="md-top md-icon" data-md-component="top" hidden>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12Z"/></svg>
+            Back to top
+          </a>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../../K8S/service_%26_network/" class="md-footer__link md-footer__link--prev" aria-label="Previous: 服务与负载" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              服务与负载
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../../linux/commands/" class="md-footer__link md-footer__link--next" aria-label="Next: 常用命令" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              常用命令
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-consent" data-md-component="consent" id="__consent" hidden>
+        <div class="md-consent__overlay"></div>
+        <aside class="md-consent__inner">
+          <form class="md-consent__form md-grid md-typeset" name="consent">
+            
+
+
+
+
+<h4>Cookie consent</h4>
+<p>We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.</p>
+<input type="checkbox" class="md-toggle" id="__settings">
+<div class="md-consent__settings">
+  <ul class="task-list">
+    
+      
+        
+        
+      
+      <li class="task-list-item">
+        <label class="task-list-control">
+          <input type="checkbox" name="analytics" checked>
+          <span class="task-list-indicator"></span>
+          Custom name
+        <label>
+      </li>
+    
+  </ul>
+</div>
+<div class="md-consent__controls">
+  
+    
+      <button class="md-button md-button--primary">Accept</button>
+    
+    
+    
+  
+    
+    
+    
+      <label class="md-button" for="__settings">Manage settings</label>
+    
+  
+    
+    
+      <button type="reset" class="md-button md-button--primary">Reject</button>
+    
+    
+  
+</div>
+          </form>
+        </aside>
+      </div>
+      <script>var consent=__md_get("__consent");if(consent)for(var input of document.forms.consent.elements)input.name&&(input.checked=consent[input.name]||!1);else"file:"!==location.protocol&&setTimeout(function(){document.querySelector("[data-md-component=consent]").hidden=!1},250);var action,form=document.forms.consent;for(action of["submit","reset"])form.addEventListener(action,function(e){if(e.preventDefault(),"reset"===e.type)for(var n of document.forms.consent.elements)n.name&&(n.checked=!1);console.log(new FormData(form)),__md_set("__consent",Object.fromEntries(Array.from(new FormData(form).keys()).map(function(e){return[e,!0]}))),location.hash="",location.reload()})</script>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.top", "navigation.instant", "navigation.tracking", "content.code.annotate", "content.tabs.link", "navigation.indexes", "navigation.tabs", "navigation.tabs.sticky"], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.9c69f0bc.min.js"></script>
+      
+        <script src="../../javascripts/extra.js"></script>
+      
+        <script src="../../javascripts/tablesort.js"></script>
+      
+        <script src="../../javascripts/mathjax.js"></script>
+      
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+      
+    
+  </body>
+</html>

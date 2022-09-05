@@ -1,0 +1,26 @@
+:root>* {
+  --md-primary-fg-color: #EE0F0F;
+  --md-primary-fg-color--light: #ECB7B7;
+  --md-primary-fg-color--dark: #90030C;
+
+  --md-code-hl-string-color: #0FF1CE;
+  --md-tooltip-width: 600px;
+}
+
+.highlight .sb {
+  color: #0FF1CE;
+}
+
+[data-md-color-scheme="youtube"] {
+  --md-primary-fg-color:        #EE0F0F;
+  --md-primary-fg-color--light: #ECB7B7;
+  --md-primary-fg-color--dark:  #90030C;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-hue: 210;
+}
+
+.md-grid {
+  max-width: 1440px;
+}
